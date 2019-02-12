@@ -19,6 +19,10 @@ nav ul li.active {
   height: 1px;
 }
 
+.navbar-bottom {
+  height: 40px;
+}
+
 /* TEXT COLORS */
 
 .primary-color {

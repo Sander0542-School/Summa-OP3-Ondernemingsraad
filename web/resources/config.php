@@ -6,4 +6,6 @@ session_start();
 define("LIBRARY_PATH", realpath(dirname(__FILE__) . '/library'));
 define("TEMPLATE_PATH", realpath(dirname(__FILE__) . '/template'));
 
-//require_once(LIBRARY_PATH . '/classes.php'); TODO() Create Classes
+require_once(LIBRARY_PATH . '/autoload.php'); //TODO() Create Classes
+
+$_CONNECTION = (new Connection())->getConnection();
