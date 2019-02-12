@@ -10,7 +10,10 @@ class Gebruiker {
   private $record;
 
   /**
-   * Constructor
+   * __construct
+   *
+   * @param  PDO $conn
+   * @param  array $gebruiker
    */
   private function __construct(PDO $conn, array $gebruiker) {
     $this->record = $gebruiker;
@@ -20,14 +23,21 @@ class Gebruiker {
   }
 
   /**
-   * Methods
+   * heeftGestemd
+   *
+   * @return bool
    */
   public function heeftGestemd() {
     return $this->record['gestemd'] !== 0;
   }
 
   /**
-   * Init
+   * fromGebruikerID
+   *
+   * @param  PDO $conn
+   * @param  int $gebruikerID
+   *
+   * @return Gebruiker|bool
    */
   public static function fromGebruikerID(PDO $conn, $gebruikerID) {
     $stmt = $conn->prepare("SELECT * FROM `gebruikers` WHERE `id` = :gebruikerID");
@@ -42,6 +52,14 @@ class Gebruiker {
     return false;
   }
 
+  /**
+   * fromGebruikersnaam
+   *
+   * @param  PDO $conn
+   * @param  string $gebruikersnaam
+   *
+   * @return Gebruiker|bool
+   */
   public static function fromGebruikersnaam(PDO $conn, $gebruikersnaam) {
     $stmt = $conn->prepare("SELECT * FROM `gebruikers` WHERE `gebruikersnaam` = :gebruikersnaam");
     $stmt->bindParam(":gebruikersnaam", $gebruikersnaam);

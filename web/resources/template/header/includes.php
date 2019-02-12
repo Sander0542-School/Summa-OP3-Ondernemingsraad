@@ -10,7 +10,7 @@
     
     <link href="/image/favicon.ico" rel="Shortcut Icon" type="image/ico"/>
 
-    <link rel="stylesheet" type="text/css" href="/styles/devices/dist/device-mockups.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="/styles/materialize/css/materialize.min.css">
     <link rel="stylesheet" type="text/css" href="/styles/materialize/fonts/material-icons.min.css">
     <link rel="stylesheet" type="text/css" href="/styles/fontawesome/css/fontawesome-all.min.css">
