@@ -1,6 +1,9 @@
 <?php
 
 class Stemmen {
+  public $omschrijving;
+
+  private $conn;
 
   /**
    * __construct
@@ -10,8 +13,13 @@ class Stemmen {
    */
   private function __construct(PDO $conn, array $verkiesbare) {
     $this->record = $verkiesbare;
+    $this->conn = $conn;
 
     $this->omschrijving = $verkiesbare['omschrijving'];
+  }
+
+  public function getGebruiker() {
+    return Gebruiker::fromGebruikerID($this->conn, $this->record["gebruiker_id"]);
   }
 
   /**
@@ -19,16 +27,19 @@ class Stemmen {
    *
    * @param  PDO $conn
    *
-   * @return Stemmen
+   * @return Stemmen[]
    */
   public static function getVerkiesbare(PDO $conn) {
-      $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `gekeurd` = :gekeurd");
-      $stmt->bindParam(1, $gekeurd);
+      $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `gekeurd` = 1");
   
       $stmt->execute();
   
       if ($stmt->rowCount() > 0) {
-        return new Gebruiker($conn, $stmt->fetch(PDO::FETCH_ASSOC));
+        $gebruikers = array();
+        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+          array_push($gebruikers, new Stemmen($conn, $verkiesbare));
+        }
+        return $gebruikers;
       }
   
       return false;

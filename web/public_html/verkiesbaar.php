@@ -31,9 +31,8 @@ $_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
                     <input id="last_name" type="text" value="<?=$_GEBRUIKER->achternaam?>" class="validate" readonly>
                     <label for="last_name" class="active">Achternaam</label>
                   </div>
-
                   <div class="input-field col s12">
-                    <textarea id="description" class="materialize-textarea"></textarea>
+                    <textarea rows="10" id="description" class="materialize-textarea"></textarea>
                     <label for="description">Omschrijving</label>
                   </div>
                 </div>
@@ -50,3 +49,9 @@ $_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
 
   </div>
 </div>
+
+<?php
+include(TEMPLATE_PATH . '/scripts.php');
+
+include(TEMPLATE_PATH . '/footer.php');
+?>

@@ -23,6 +23,15 @@ class Gebruiker {
   }
 
   /**
+   * getNaam
+   *
+   * @return string
+   */
+  public function getNaam() {
+    return $this->voornaam . ' ' . $this->achternaam;
+  }
+
+  /**
    * heeftGestemd
    *
    * @return bool

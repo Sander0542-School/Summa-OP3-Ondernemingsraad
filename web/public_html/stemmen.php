@@ -5,13 +5,8 @@ require('../resources/config.php');
 $pageTitle = 'Stemmen';
 
 include(TEMPLATE_PATH . '/header.php');
-?>
-
-<?php
 
 $_VERKIESBARE = Stemmen::getVerkiesbare($_CONNECTION);
-
-for () {
 ?>
 
 <div class="row">
@@ -19,25 +14,43 @@ for () {
   <div class="col s12 l10">
 
     <div class="row">
-      <div class="col s12 m4 l3">
 
+
+<?php
+if ($_VERKIESBARE !== false) {
+  /**
+   * @var $verkiesbare Stemmen
+   */
+  foreach ($_VERKIESBARE as $verkiesbare) {
+?>
+
+      <div class="col s12 m4 l3">
         <div class="card">
           <div class="card-image">
             <img src="/images/defualt.jpg">
           </div>
           <div class="card-content">
-            <span class="card-title">Card Title</span>
-            <p>I am a very simple card. I am good at containing small bits of information. I am convenient because I
-              require little markup to use effectively.</p>
+            <span class="card-title"><?=$verkiesbare->getGebruiker()->getNaam()?></span>
+            <p><?=$verkiesbare->omschrijving?></p>
           </div>
+        <div class="card-action">
+          <a class="" href="#">Stem</a>
         </div>
-
+        </div>
       </div>
+<?php
+  }
+}
+?>
+
     </div>
 
 
   </div>
 </div>
+
 <?php 
-}
+include(TEMPLATE_PATH . '/scripts.php');
+
+include(TEMPLATE_PATH . '/footer.php');
 ?>
