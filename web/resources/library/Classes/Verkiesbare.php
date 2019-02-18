@@ -10,13 +10,13 @@ class Verkiesbare {
    * __construct
    *
    * @param  PDO $conn
-   * @param  array $verkiesbare
+   * @param  array $record
    */
-  private function __construct(PDO $conn, array $verkiesbare) {
-    $this->record = $verkiesbare;
+  private function __construct(PDO $conn, array $record) {
+    $this->record = $record;
     $this->conn = $conn;
 
-    $this->omschrijving = $verkiesbare['omschrijving'];
+    $this->omschrijving = $record['omschrijving'];
   }
 
   /**
@@ -25,7 +25,16 @@ class Verkiesbare {
    * @return Gebruiker|bool
    */
   public function getGebruiker() {
-    return Gebruiker::fromGebruikerID($this->conn, $this->record["gebruiker_id"]);
+    return Gebruiker::fromID($this->conn, $this->record["gebruiker_id"]);
+  }
+
+  /**
+   * getPeriode
+   *
+   * @return Periode|bool
+   */
+  public function getPeriode() {
+    return Periode::fromID($this->conn, $this->record["periode_id"]);
   }
 
   /**
@@ -34,7 +43,20 @@ class Verkiesbare {
    * @return void
    */
   public function getID() {
-    return $this->recrod["id"];
+    return $this->record["id"];
+  }
+
+  public static function fromID(PDO $conn, $verkiesbareID) {
+    $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `id` = :verkiesbareID");
+    $stmt->bindParam(":verkiesbareID", $verkiesbareID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return new Verkiesbare($conn, $stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    return false;
   }
 
   /**
@@ -61,5 +83,3 @@ class Verkiesbare {
     }
     
 }
-
-?>

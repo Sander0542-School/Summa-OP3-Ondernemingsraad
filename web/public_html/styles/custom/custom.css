@@ -130,7 +130,22 @@ a {
 }
 
 .row.flex .col {
+  display: flex;
   margin-left: 0;
+}
+
+.row.flex .col .card {
+  width: 100%;
+}
+
+.row.flex .col .card  .card-content {
+  margin-bottom: 55px;
+}
+
+.row.flex .col .card  .card-action {
+  bottom: 0;
+  position: absolute;
+  width: 100%;
 }
 
 /* CURSOR */

@@ -9,3 +9,9 @@ define("TEMPLATE_PATH", realpath(dirname(__FILE__) . '/template'));
 require_once(LIBRARY_PATH . '/autoload.php'); //TODO() Create Classes
 
 $_CONNECTION = (new Connection())->getConnection();
+
+$_GEBRUIKER = false;
+
+if (Gebruiker::isIngelogd($_CONNECTION)) {
+  $_GEBRUIKER = Gebruiker::fromID($_CONNECTION, $_SESSION["userID"]);
+}

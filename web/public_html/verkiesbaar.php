@@ -6,7 +6,7 @@ $pageTitle = 'Verkiesbaar';
 
 include(TEMPLATE_PATH . '/header.php');
 
-$_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
+$_GEBRUIKER = Gebruiker::fromID($_CONNECTION, 1);
 
 ?>
 
@@ -15,12 +15,14 @@ $_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
   <div class="col s12 l10">
 
     <div class="row">
+
       <div class="col s12 m6">
 
         <div class="card">
           <div class="card-content">
             <span class="card-title">Verkiesbaar Stellen</span>
             <div class="row">
+            
               <form class="col s12">
                 <div class="row">
                   <div class="input-field col s6">
@@ -39,13 +41,13 @@ $_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
                     <select id="periode" name="periode">
                       <option value="" disabled selected>Kies een periode</option>
 <?php
-$periodes = Periode::getPeriodes($_CONNECTION);
+$periodes = Periode::getPeriodes($_CONNECTION, false);
 
 if ($periodes !== false) {
   foreach ($periodes as $periode) {
 ?>
 
-                      <option value="<?=$periode->getID()?>"><?=$periode->getNaam()?></option>
+                      <option value="<?=$periode->getID()?>"><?=$periode->getNaam()?> (<?=$periode->getBeginDatum()?> - <?=$periode->getEindDatum()?>)</option>
 
 <?php
   }
@@ -64,6 +66,15 @@ if ($periodes !== false) {
         </div>
 
       </div>
+
+      <div class="col s12 m6">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title"></span>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>

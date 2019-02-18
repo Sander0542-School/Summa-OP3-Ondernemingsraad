@@ -1,5 +1,7 @@
     <script src="/styles/jquery/jquery.min.js"></script>
     <script src="/styles/materialize/js/materialize.min.js"></script>
+    <script src="/styles/custom/custom.js"></script>
+
     
     <script>
       $(document).ready(function () {

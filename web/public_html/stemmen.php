@@ -6,22 +6,31 @@ $pageTitle = 'Stemmen';
 
 include(TEMPLATE_PATH . '/header.php');
 
-$_VERKIESBARE = Verkiesbare::getVerkiesbare($_CONNECTION);
+
+
+if (isset($_POST["verkiesbare"]) && Gebruiker::isIngelogd($_CONNECTION)) {
+  $verkiesbare = Verkiesbare::fromID();
+  if ($verkiesbare !== false) {
+    Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER);
+  }
+}
 ?>
 
 <div class="row">
   <div class="col l1"></div>
   <div class="col s12 l10">
 
-    <div class="row">
+    <div class="row flex">
 
 
 <?php
-if ($_VERKIESBARE !== false) {
+$verkiesbaren = Verkiesbare::getVerkiesbare($_CONNECTION);
+
+if ($verkiesbaren !== false) {
   /**
-   * @var $verkiesbare Stemmen
+   * @var $verkiesbare Verkiesbare
    */
-  foreach ($_VERKIESBARE as $verkiesbare) {
+  foreach ($verkiesbaren as $verkiesbare) {
 ?>
 
       <div class="col s12 m4 l3">
@@ -34,7 +43,7 @@ if ($_VERKIESBARE !== false) {
             <p><?=$verkiesbare->omschrijving?></p>
           </div>
         <div class="card-action">
-          <a class="" href="#">Stem</a>
+          <a href="#" onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>')">Stem</a>
         </div>
         </div>
       </div>
@@ -48,6 +57,22 @@ if ($_VERKIESBARE !== false) {
 
   </div>
 </div>
+
+  <!-- Modal Structure -->
+  
+  <div id="modalStemmen" class="modal modal-small">
+    <form action="/stemmen" method="post">
+      <input type="hidden" id="verkiesbareID" name="verkiesbare"/>
+      <div class="modal-content">
+        <h4>Stemmen</h4>
+        <p >Weet u zeker dat u op <b id="verkiesbareNaam"></b> wilt stemmen?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Stem</button>
+        <a href="#" class="modal-close waves-effect waves-red red-text btn-flat left">Annuleren</a>
+      </div>
+    </form>
+  </div>
 
 <?php 
 include(TEMPLATE_PATH . '/scripts.php');

@@ -32,6 +32,15 @@ class Gebruiker {
   }
 
   /**
+   * getGebruikersnaam
+   *
+   * @return string
+   */
+  public function getGebruikersnaam() {
+    return $this->record["gebruikersnaam"];
+  }
+
+  /**
    * getNaam
    *
    * @return string
@@ -49,15 +58,29 @@ class Gebruiker {
     return $this->record['gestemd'] !== 0;
   }
 
+  public function getEncryptedID() {
+    $data = '3jef7ui';
+    $data.= ($this->getID() + 3);
+    $data.= '4589fjk';
+    $data.= ($this->getID() + 23);
+    $data.= 'ef8dfk8';
+    $data.= ($this->getID() + 89);
+    $data.= '4r9dv893478fr3fv3rv89rcd';
+
+    $data = substr($data, 0, 40);
+
+    return hash('sha1', $data);
+  }
+
   /**
-   * fromGebruikerID
+   * fromID
    *
    * @param  PDO $conn
    * @param  int $gebruikerID
    *
    * @return Gebruiker|bool
    */
-  public static function fromGebruikerID(PDO $conn, $gebruikerID) {
+  public static function fromID(PDO $conn, $gebruikerID) {
     $stmt = $conn->prepare("SELECT * FROM `gebruikers` WHERE `id` = :gebruikerID");
     $stmt->bindParam(":gebruikerID", $gebruikerID);
 
@@ -86,6 +109,23 @@ class Gebruiker {
 
     if ($stmt->rowCount() > 0) {
       return new Gebruiker($conn, $stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    return false;
+  }
+
+  /**
+   * isIngelogd
+   *
+   * @param  PDO $conn
+   *
+   * @return bool
+   */
+  public static function isIngelogd(PDO $conn) {
+    if (isset($_SESSION["userID"])) {
+      if (Gebruiker::fromID($conn, $_SESSION["userID"]) !== false) {
+        return true;
+      }
     }
 
     return false;
