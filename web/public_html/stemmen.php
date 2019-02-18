@@ -6,7 +6,7 @@ $pageTitle = 'Stemmen';
 
 include(TEMPLATE_PATH . '/header.php');
 
-$_VERKIESBARE = Stemmen::getVerkiesbare($_CONNECTION);
+$_VERKIESBARE = Verkiesbare::getVerkiesbare($_CONNECTION);
 ?>
 
 <div class="row">

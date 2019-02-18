@@ -23,6 +23,15 @@ class Gebruiker {
   }
 
   /**
+   * getID
+   *
+   * @return int
+   */
+  public function getID() {
+    return $this->record["id"];
+  }
+
+  /**
    * getNaam
    *
    * @return string

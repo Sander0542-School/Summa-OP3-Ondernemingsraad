@@ -35,6 +35,25 @@ $_GEBRUIKER = Gebruiker::fromGebruikerID($_CONNECTION, 1);
                     <textarea rows="10" id="description" class="materialize-textarea"></textarea>
                     <label for="description">Omschrijving</label>
                   </div>
+                  <div class="input-field col s12">
+                    <select id="periode" name="periode">
+                      <option value="" disabled selected>Kies een periode</option>
+<?php
+$periodes = Periode::getPeriodes($_CONNECTION);
+
+if ($periodes !== false) {
+  foreach ($periodes as $periode) {
+?>
+
+                      <option value="<?=$periode->getID()?>"><?=$periode->getNaam()?></option>
+
+<?php
+  }
+}
+?>
+                    </select>
+                    <label for="periode">Periode</label>
+                  </div>
                 </div>
                 <button class="btn waves-effect waves-light" type="submit" name="action">Aanvragen
                     <i class="material-icons right">send</i>

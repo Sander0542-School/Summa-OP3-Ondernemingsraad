@@ -1,7 +1,5 @@
 <?php
-
-require('Database/Connection.php');
-require('Gebruikers/Gebruiker.php');
-require('Gebruikers/Stemmen.php');
-
+foreach (glob(__DIR__ . '/*/*.php') as $classFile) {
+  require($classFile);
+}
 ?>
