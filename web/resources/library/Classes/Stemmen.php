@@ -18,20 +18,28 @@ Class Stemmen {
    * @param  Verkiesbare $verkiesbare
    * @param  Gebruiker $gebruiker
    *
-   * @return bool
+   * @return int
    */
   public static function addStem(PDO $conn, Verkiesbare $verkiesbare, Gebruiker $gebruiker) {
-    $stmt = $conn->prepare("INSERT INTO 'stemmen' ('verkiesbare_id', 'gebruiker') VALUES (:verkiesbare, :gebruiker)");
+    $stmt = $conn->prepare("INSERT INTO `stemmen` (`verkiesbare_id`, `gebruiker`, `periode_id`) VALUES (:verkiesbare, :gebruiker, :periode)");
 
-    $stmt->bindParam(":verkiesbare", $verkiesbare->getID());
-    $stmt->bindParam(":gebruiker", $gebruiker->getEncryptedID());
+    $verkiesbareID = $verkiesbare->getID();
+    $gebruikerID = $gebruiker->getEncryptedID();
+    $periodeID = 1;
+
+    $stmt->bindParam(":verkiesbare", $verkiesbareID);
+    $stmt->bindParam(":gebruiker", $gebruikerID);
+    $stmt->bindParam(":periode", $periodeID);
 
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-      return true;
+      return 0;
     }
-    return false;
+    else{
+      return 2;
+    }
+    return 1;
   }
 
 }

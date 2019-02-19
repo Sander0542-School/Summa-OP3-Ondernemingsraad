@@ -6,7 +6,25 @@ $pageTitle = 'Verkiesbaar';
 
 include(TEMPLATE_PATH . '/header.php');
 
-$_GEBRUIKER = Gebruiker::fromID($_CONNECTION, 1);
+if (isset($_POST["description"]) && isset($_POST["periode"])) {
+  $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
+  if ($periode !== false) {
+    if ($_GEBRUIKER->verkiesbaarStellen($periode, $_POST["description"])) {
+      $modal = [
+        'title' => 'Verkiesbaar Gesteld',
+        'content' => 'U heeft zich verkiesbaar gesteld. Deze actie moet nu nog goed gekeurd worden door de beheerders',
+        'autoLoad' => true
+      ];
+    } else {
+      $modal = [
+        'title' => 'Fout',
+        'content' => 'Er is een fout opgetreden tijdens het verkiesbaar stellen.',
+        'autoLoad' => true
+      ];
+    }
+    (new Modal($modal))->show();
+  }
+}
 
 ?>
 
@@ -23,7 +41,7 @@ $_GEBRUIKER = Gebruiker::fromID($_CONNECTION, 1);
             <span class="card-title">Verkiesbaar Stellen</span>
             <div class="row">
             
-              <form class="col s12">
+              <form class="col s12" method="post" action="/verkiesbaar">
                 <div class="row">
                   <div class="input-field col s6">
                     <input id="first_name" type="text" value="<?=$_GEBRUIKER->voornaam?>" class="validate" readonly>
@@ -34,11 +52,11 @@ $_GEBRUIKER = Gebruiker::fromID($_CONNECTION, 1);
                     <label for="last_name" class="active">Achternaam</label>
                   </div>
                   <div class="input-field col s12">
-                    <textarea rows="10" id="description" class="materialize-textarea"></textarea>
+                    <textarea rows="10" id="description" name="description" class="materialize-textarea" required></textarea>
                     <label for="description">Omschrijving</label>
                   </div>
                   <div class="input-field col s12">
-                    <select id="periode" name="periode">
+                    <select id="periode" name="periode" required>
                       <option value="" disabled selected>Kies een periode</option>
 <?php
 $periodes = Periode::getPeriodes($_CONNECTION, false);
@@ -58,8 +76,8 @@ if ($periodes !== false) {
                   </div>
                 </div>
                 <button class="btn waves-effect waves-light" type="submit" name="action">Aanvragen
-                    <i class="material-icons right">send</i>
-                  </button>
+                  <i class="material-icons right">send</i>
+                </button>
               </form>
             </div>
           </div>

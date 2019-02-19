@@ -67,19 +67,19 @@ class Verkiesbare {
    * @return getVerkiesbare[]
    */
   public static function getVerkiesbare(PDO $conn) {
-      $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `gekeurd` = 1");
-  
-      $stmt->execute();
-  
-      if ($stmt->rowCount() > 0) {
-        $gebruikers = array();
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
-          array_push($gebruikers, new Verkiesbare($conn, $verkiesbare));
-        }
-        return $gebruikers;
+    $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `gekeurd` = 1");
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+        array_push($gebruikers, new Verkiesbare($conn, $verkiesbare));
       }
-  
-      return false;
+      return $gebruikers;
     }
-    
+
+    return false;
+  }
+
 }

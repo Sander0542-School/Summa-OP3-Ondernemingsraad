@@ -82,7 +82,7 @@ class Periode {
 
     $stmt->execute();
 
-    if ($stmt->recordCount() > 0) {
+    if ($stmt->rowCount() > 0) {
       return new Periode($conn, $stmt->fetch(PDO::FETCH_ASSOC));
     }
 

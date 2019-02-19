@@ -14,4 +14,9 @@ $_GEBRUIKER = false;
 
 if (Gebruiker::isIngelogd($_CONNECTION)) {
   $_GEBRUIKER = Gebruiker::fromID($_CONNECTION, $_SESSION["userID"]);
+} else {
+  if ($_SERVER["PHP_SELF"] != '/login.php') {
+    header("Location: /login");
+    die();
+  }
 }

@@ -4,3 +4,8 @@ function openStemModal(verkiesbareID, verkiesbareNaam) {
   $('#verkiesbareNaam').text(verkiesbareNaam);
 }
 
+function openGestemdModal(verkiesbareNaam) {
+  $('#modalGestemd').modal('open');
+  $('#verkiesbareNaam').text(verkiesbareNaam);
+}
+

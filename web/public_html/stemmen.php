@@ -8,12 +8,27 @@ include(TEMPLATE_PATH . '/header.php');
 
 
 
-if (isset($_POST["verkiesbare"]) && Gebruiker::isIngelogd($_CONNECTION)) {
-  $verkiesbare = Verkiesbare::fromID();
-  if ($verkiesbare !== false) {
-    Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER);
+if (isset($_POST["verkiesbareID"])) {
+  $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
+  if ($verkiesbare !== false) {  
+    $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
+    if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
+      $modal = [
+        'title' => 'Gestemd!',
+        'content' => 'U heeft succesvol gestemd op '.$verkiesbareNaam,
+        'autoLoad' => true
+      ];
+    } else {
+      $modal = [
+        'title' => 'Niet Gestemd',
+        'content' => 'Er is een fout opgetreden tijdens het stemmen. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+        'autoLoad' => true
+      ];
+    }
+    (new Modal($modal))->show();
   }
 }
+
 ?>
 
 <div class="row">
@@ -43,7 +58,7 @@ if ($verkiesbaren !== false) {
             <p><?=$verkiesbare->omschrijving?></p>
           </div>
         <div class="card-action">
-          <a href="#" onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>')">Stem</a>
+          <a class="primary-color-text" href="# " onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>')">Stem</a>
         </div>
         </div>
       </div>
@@ -58,14 +73,15 @@ if ($verkiesbaren !== false) {
   </div>
 </div>
 
-  <!-- Modal Structure -->
+  <!-- Modal Structure Stemmen -->
   
   <div id="modalStemmen" class="modal modal-small">
     <form action="/stemmen" method="post">
-      <input type="hidden" id="verkiesbareID" name="verkiesbare"/>
+      <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
       <div class="modal-content">
         <h4>Stemmen</h4>
-        <p >Weet u zeker dat u op <b id="verkiesbareNaam"></b> wilt stemmen?</p>
+        <p >Weet u zeker dat u op <b name="verkiesbareNaam" id="verkiesbareNaam"></b> wilt stemmen?</p>
+
       </div>
       <div class="modal-footer">
         <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Stem</button>
@@ -74,6 +90,9 @@ if ($verkiesbaren !== false) {
     </form>
   </div>
 
+  <?php
+ // include TEMPLATE_PATH.'/modals/modalGestemd.php';
+  ?>
 <?php 
 include(TEMPLATE_PATH . '/scripts.php');
 

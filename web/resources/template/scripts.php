@@ -7,6 +7,7 @@
       $(document).ready(function () {
         $('.fixed-action-btn').floatingActionButton();
         $('.modal').modal();
+        $('.modal.default').modal('open');
         $('select').formSelect();
         M.textareaAutoResize($('textarea'));
         $('.tooltipped').tooltip();
