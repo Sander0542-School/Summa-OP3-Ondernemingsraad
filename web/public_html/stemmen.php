@@ -6,7 +6,7 @@ $pageTitle = 'Stemmen';
 
 include(TEMPLATE_PATH . '/header.php');
 
-
+$stemmen = Stemmen::getZetels($_CONNECTION);
 
 if (isset($_POST["verkiesbareID"])) {
   $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
@@ -29,25 +29,76 @@ if (isset($_POST["verkiesbareID"])) {
   }
 }
 
+if (!isset($_POST['periode'])) {
 ?>
-
-<div class="row">
-  <div class="col l1"></div>
-  <div class="col s12 l10">
-
-    <div class="row flex">
-
+    <div id="results" class="row">
+      <div class="col l1"></div>
+      <div class="col s12 l10">
+        <div class="row">
 
 <?php
-$verkiesbaren = Verkiesbare::getVerkiesbare($_CONNECTION);
+$periodes = Periode::getPeriodes($_CONNECTION);
 
-if ($verkiesbaren !== false) {
-  /**
-   * @var $verkiesbare Verkiesbare
-   */
-  foreach ($verkiesbaren as $verkiesbare) {
+if ($periodes !== false) {
+  foreach ($periodes as $periode) {
 ?>
 
+          <div class="col s12 l4">
+            <div class="card">
+              <div class="card-content">
+                <form method="post" action="/stemmen">
+                  <input type="hidden" name="periode" value="<?=$periode->getID()?>"/>
+                  <span class="card-title"><?=$periode->getNaam()?></span><br/>
+                  <p class="center" style="width:100%">
+                    <button type="submit" class="btn-floating btn-large center accent-color">
+                      <i class="material-icons">arrow_forward</i>
+                    </button>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+
+<?php
+  }
+}
+?>
+
+        </div>
+      </div>
+    </div>
+
+<?php 
+} else {
+  ?>
+  
+  <div class="row">
+    <div class="col l1"></div>
+    <div class="col s12 l10">
+  
+    <div class="row">
+      <div class="col s12 m4 l3">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">Aantal stemmen</span>
+            <p>U heeft <?=Stemmen::getZetels($_CONNECTION)?> stem(men) over</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="row flex">
+  
+  <?php
+  $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
+  
+  if ($periode !== false) {
+    /**
+     * @var $verkiesbare Verkiesbare
+     */
+    foreach ($periode->getVerkiesbare() as $verkiesbare) {
+  ?>
+  
       <div class="col s12 m4 l3">
         <div class="card">
           <div class="card-image">
@@ -62,13 +113,14 @@ if ($verkiesbaren !== false) {
         </div>
         </div>
       </div>
-<?php
+
+  <?php
+    }
   }
 }
 ?>
 
     </div>
-
 
   </div>
 </div>

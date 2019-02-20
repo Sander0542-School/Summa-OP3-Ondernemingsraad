@@ -46,6 +46,14 @@ class Verkiesbare {
     return $this->record["id"];
   }
 
+  /**
+   * fromID
+   *
+   * @param  PDO $conn
+   * @param  int $verkiesbareID
+   *
+   * @return Verkiesbare|bool
+   */
   public static function fromID(PDO $conn, $verkiesbareID) {
     $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `id` = :verkiesbareID");
     $stmt->bindParam(":verkiesbareID", $verkiesbareID);
@@ -57,6 +65,18 @@ class Verkiesbare {
     }
 
     return false;
+  }
+
+  /**
+   * fromArray
+   *
+   * @param  PDO $conn
+   * @param  array $record
+   *
+   * @return Verkiesbare
+   */
+  public static function fromArray(PDO $conn, $record) {
+    return new Verkiesbare($conn, $record);
   }
 
   /**

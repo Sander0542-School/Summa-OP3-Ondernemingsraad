@@ -42,4 +42,15 @@ Class Stemmen {
     return 1;
   }
 
+  public static function getZetels(PDO $conn) {
+    $stmt = $conn->prepare("SELECT * FROM `groepen`");
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return $stmt->fetch(PDO::FETCH_ASSOC)['zetels'];
+    }
+    return 0;
+  }
+
 }

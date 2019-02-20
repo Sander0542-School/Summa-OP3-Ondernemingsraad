@@ -30,7 +30,7 @@ if ($_SERVER["PHP_SELF"] == '/admin.php') {
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
         <li class="navbar-empty"><a href=""></a></li>
-        <li class="tab"><a class="active" href="#test1">Test 1</a></li>
+        <li class="tab"><a class="active" href="#results">Resultaten</a></li>
         <li class="tab"><a href="#test2">Test 2</a></li>
         <li class="tab"><a href="#test4">Test 4</a></li>
       </ul>

@@ -26,7 +26,7 @@ nav ul li.active {
 /* TEXT COLORS */
 
 .primary-color {
-  background-color: #24126e;
+  background-color: #24126e !important;
 }
 
 .primary-color-text {
@@ -34,7 +34,7 @@ nav ul li.active {
 }
 
 .accent-color {
-  background-color: #d70096;
+  background-color: #d70096 !important;
 }
 
 .accent-color-text {

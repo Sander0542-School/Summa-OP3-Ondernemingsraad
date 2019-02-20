@@ -32,12 +32,68 @@ class Periode {
     return $this->record["naam"];
   }
 
+  /**
+   * getBeginDatum
+   *
+   * @param  mixed $format
+   *
+   * @return string
+   */
   public function getBeginDatum($format = null) {
     return date($format !== null ? $format : Variables::DATE_FORMAT, strtotime($this->record["begin"]));
   }
 
+  /**
+   * getEindDatum
+   *
+   * @param  mixed $format
+   *
+   * @return string
+   */
   public function getEindDatum($format = null) {
     return date($format !== null ? $format : Variables::DATE_FORMAT, strtotime($this->record["eind"]));
+  }
+
+  /**
+   * getAantalStemmen
+   *
+   * @return int
+   */
+  public function getAantalStemmen() {
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE periode_id = :periode");
+
+    $periodeID = $this->getID();
+
+    $stmt->bindParam(":periode", $periodeID);
+
+    $stmt->execute();
+
+    return $stmt->rowCount();
+  }
+
+  /**
+   * getaantalVerkiesbaar
+   *
+   * @return Verkiesbare[]|bool
+   */
+  public function getVerkiesbare() {
+    $stmt = $this->conn->prepare("SELECT * FROM verkiesbare WHERE periode_id = :periode AND gekeurd = 1");
+
+    $periodeID = $this->getID();
+
+    $stmt->bindParam(":periode", $periodeID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+        array_push($gebruikers, Verkiesbare::fromArray($this->conn, $verkiesbare));
+      }
+      return $gebruikers;
+    }
+
+    return false;
   }
 
   /**

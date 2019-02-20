@@ -8,7 +8,13 @@ include(TEMPLATE_PATH . '/header.php');
 
 ?>
 
+<div style="margin-top: 50px">
 
+<?php
+include(TEMPLATE_PATH . '/admin/results.php');
+?>
+
+</div>
 
 <?php
 
