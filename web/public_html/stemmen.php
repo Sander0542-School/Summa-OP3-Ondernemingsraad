@@ -129,7 +129,8 @@ if ($periodes !== false) {
   
   <div id="modalStemmen" class="modal modal-small">
     <form action="/stemmen" method="post">
-      <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
+      <input type="hidden" name="verkiesbareID"/>
+      <input type="hidden" value="<?=(isset($_POST["periode"]) ? $_POST["periode"] : '')?>" name="periode"/>
       <div class="modal-content">
         <h4>Stemmen</h4>
         <p >Weet u zeker dat u op <b name="verkiesbareNaam" id="verkiesbareNaam"></b> wilt stemmen?</p>
@@ -141,10 +142,7 @@ if ($periodes !== false) {
       </div>
     </form>
   </div>
-
-  <?php
- // include TEMPLATE_PATH.'/modals/modalGestemd.php';
-  ?>
+  
 <?php 
 include(TEMPLATE_PATH . '/scripts.php');
 
