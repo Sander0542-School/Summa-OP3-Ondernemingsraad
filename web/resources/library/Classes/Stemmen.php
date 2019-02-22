@@ -21,25 +21,20 @@ Class Stemmen {
    * @return int
    */
   public static function addStem(PDO $conn, Verkiesbare $verkiesbare, Gebruiker $gebruiker) {
-    $stmt = $conn->prepare("INSERT INTO `stemmen` (`verkiesbare_id`, `gebruiker`, `periode_id`) VALUES (:verkiesbare, :gebruiker, :periode)");
+    $stmt = $conn->prepare("INSERT INTO `stemmen` (`verkiesbare_id`, `gebruiker`) VALUES (:verkiesbare, :gebruiker)");
 
     $verkiesbareID = $verkiesbare->getID();
     $gebruikerID = $gebruiker->getEncryptedID();
-    $periodeID = 1;
 
     $stmt->bindParam(":verkiesbare", $verkiesbareID);
     $stmt->bindParam(":gebruiker", $gebruikerID);
-    $stmt->bindParam(":periode", $periodeID);
 
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-      return 0;
+      return true;
     }
-    else{
-      return 2;
-    }
-    return 1;
+    return false;
   }
 
   public static function getZetels(PDO $conn) {

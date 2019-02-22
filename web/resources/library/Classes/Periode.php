@@ -60,7 +60,7 @@ class Periode {
    * @return int
    */
   public function getAantalStemmen() {
-    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE periode_id = :periode");
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE verkiesbare_id IN (SELECT id FROM verkiesbare WHERE periode_id = :periode)");
 
     $periodeID = $this->getID();
 
@@ -69,6 +69,31 @@ class Periode {
     $stmt->execute();
 
     return $stmt->rowCount();
+  }
+
+  /**
+   * getAantalStemmen
+   *
+   * @return StemResultaat[]|bool
+   */
+  public function getResultaten() {
+    $stmt = $this->conn->prepare("SELECT verkiesbare_id, COUNT(id) FROM stemmen GROUP BY verkiesbare_id WHERE periode_id = :periode");
+
+    $periodeID = $this->getID();
+
+    $stmt->bindParam(":periode", $periodeID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+        array_push($gebruikers, StemResultaat::fromArray($this->conn, $verkiesbare));
+      }
+      return $gebruikers;
+    }
+
+    return false;
   }
 
   /**
@@ -107,7 +132,7 @@ class Periode {
 
     $sql = "SELECT * FROM periodes ORDER BY begin ASC";
     if ($showAll == false) {
-      $sql = "SELECT * FROM periodes WHERE DATE(begin) > NOW() - INTERVAL 3 MONTH AND DATE(begin) > NOW() - INTERVAL 1 WEEK ORDER BY begin ASC";
+      $sql = "SELECT * FROM periodes WHERE NOW() BETWEEN DATE(begin) - INTERVAL 3 MONTH AND DATE(begin) - INTERVAL 1 WEEK ORDER BY begin ASC";
     }
 
     $stmt = $conn->prepare($sql);

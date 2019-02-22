@@ -10,7 +10,7 @@ $stemmen = Stemmen::getZetels($_CONNECTION);
 
 if (isset($_POST["verkiesbareID"])) {
   $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
-  if ($verkiesbare !== false) {  
+  if ($verkiesbare !== false) {
     $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
     if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
       $modal = [
@@ -129,8 +129,8 @@ if ($periodes !== false) {
   
   <div id="modalStemmen" class="modal modal-small">
     <form action="/stemmen" method="post">
-      <input type="hidden" name="verkiesbareID"/>
-      <input type="hidden" value="<?=(isset($_POST["periode"]) ? $_POST["periode"] : '')?>" name="periode"/>
+      <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
+      <input type="hidden" value="<?=$_POST["periode"]?>" name="periode"/>
       <div class="modal-content">
         <h4>Stemmen</h4>
         <p >Weet u zeker dat u op <b name="verkiesbareNaam" id="verkiesbareNaam"></b> wilt stemmen?</p>
