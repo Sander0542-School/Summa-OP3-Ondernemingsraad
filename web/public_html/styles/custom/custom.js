@@ -9,3 +9,11 @@ function openGestemdModal(verkiesbareNaam) {
   $('#verkiesbareNaam').text(verkiesbareNaam);
 }
 
+function openAanvraagModal(verkiesbareID, verkiesbareNaam, omschrijving) {
+  $('#modalAanvraag').modal('open');
+  $('#verkiesbareID').val(verkiesbareID);
+  $('#verkiesbareNaam').text(verkiesbareNaam);
+  $('#omschrijving').text(omschrijving);
+}
+
+

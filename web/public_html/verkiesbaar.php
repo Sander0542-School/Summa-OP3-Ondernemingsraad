@@ -88,7 +88,40 @@ if ($periodes !== false) {
       <div class="col s12 m6">
         <div class="card">
           <div class="card-content">
-            <span class="card-title"></span>
+            <span class="card-title">Verkiesbare Aanvragen</span>
+<?php
+$aanvragen = $_GEBRUIKER->getVerkiesbareAanvragen();
+
+if ($aanvragen !== false) {
+?>
+            <table>
+              <thead>
+                <tr>
+                  <th>Periode</th>
+                  <th>Datum</th>
+                  <th>Omschrijving</th>
+                </tr>
+              </thead>
+              <tbody>
+<?php
+  /**
+   * @var $aanvraag Verkiesbare
+   */
+  foreach ($aanvragen as $aanvraag) {
+?>
+                <tr>
+                  <td><?=$aanvraag->getPeriode()->getNaam()?></td>
+                  <td><?=$aanvraag->getPeriode()->getBeginDatum()?> - <?=$aanvraag->getPeriode()->getEindDatum()?></td>
+                  <td><?=$aanvraag->omschrijving?></td>
+                </tr>
+<?php
+  }
+?>
+              </tbody>
+            </table>
+<?php
+}
+?>
           </div>
         </div>
       </div>

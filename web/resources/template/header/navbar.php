@@ -31,8 +31,8 @@ if ($_SERVER["PHP_SELF"] == '/admin.php') {
       <ul class="tabs tabs-transparent">
         <li class="navbar-empty"><a href=""></a></li>
         <li class="tab"><a class="active" href="#results">Resultaten</a></li>
-        <li class="tab"><a href="#test2">Test 2</a></li>
-        <li class="tab"><a href="#test4">Test 4</a></li>
+        <li class="tab"><a href="#aanvragen">Aanvragen</a></li>
+        <li class="tab"><a href="#periodes">Periodes</a></li>
       </ul>
     </div>
 <?php

@@ -14,6 +14,14 @@ include(TEMPLATE_PATH . '/header.php');
 include(TEMPLATE_PATH . '/admin/results.php');
 ?>
 
+<?php
+include(TEMPLATE_PATH . '/admin/aanvragen.php');
+?>
+
+<?php
+include(TEMPLATE_PATH . '/admin/periodes.php');
+?>
+
 </div>
 
 <?php

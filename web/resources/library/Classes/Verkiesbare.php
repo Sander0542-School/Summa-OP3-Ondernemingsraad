@@ -102,4 +102,20 @@ class Verkiesbare {
     return false;
   }
 
+  public static function getAanvraag(PDO $conn) {
+    $stmt = $conn->prepare("SELECT * FROM `verkiesbare` WHERE `gekeurd` = 0");
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+        array_push($gebruikers, new Verkiesbare($conn, $verkiesbare));
+      }
+      return $gebruikers;
+    }
+
+    return false;
+  }
+
 }

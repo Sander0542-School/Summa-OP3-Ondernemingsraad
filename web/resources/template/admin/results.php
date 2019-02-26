@@ -19,6 +19,9 @@ if ($periodes !== false) {
                 <p>Aantal Stemmen: <?=$periode->getAantalStemmen()?></p>
                 <p>Aantal Verkiesbaar: <?=($verkiesbaar !== false ? count($verkiesbaar) : 0)?></p>
               </div>
+              <div class="card-action">
+                <a class="primary-color-text" href="#">Exporteer</a>
+              </div>
             </div>
           </div>
 

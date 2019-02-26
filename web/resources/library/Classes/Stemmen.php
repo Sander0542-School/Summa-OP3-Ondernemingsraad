@@ -37,6 +37,13 @@ Class Stemmen {
     return false;
   }
 
+  /**
+   * getZetels
+   *
+   * @param  PDO $conn
+   *
+   * @return int
+   */
   public static function getZetels(PDO $conn) {
     $stmt = $conn->prepare("SELECT * FROM `groepen`");
 

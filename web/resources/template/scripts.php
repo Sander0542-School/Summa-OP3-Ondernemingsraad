@@ -16,7 +16,6 @@
         $('.datepicker').datepicker({
           format: 'dd-mm-yyyy',
           firstDay: 1,
-          defaultDate: new Date(),
           setDefaultDate: true,
           showDaysInNextAndPreviousMonths: true,
           container: document.body,

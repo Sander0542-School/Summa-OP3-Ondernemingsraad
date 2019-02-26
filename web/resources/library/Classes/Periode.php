@@ -40,7 +40,7 @@ class Periode {
    * @return string
    */
   public function getBeginDatum($format = null) {
-    return date($format !== null ? $format : Variables::DATE_FORMAT, strtotime($this->record["begin"]));
+    return DateTime::createFromFormat('Y-m-d H:i:s', $this->record["begin"])->format($format !== null ? $format : Variables::DATE_FORMAT);
   }
 
   /**
@@ -51,7 +51,7 @@ class Periode {
    * @return string
    */
   public function getEindDatum($format = null) {
-    return date($format !== null ? $format : Variables::DATE_FORMAT, strtotime($this->record["eind"]));
+    return DateTime::createFromFormat('Y-m-d H:i:s', $this->record["eind"])->format($format !== null ? $format : Variables::DATE_FORMAT);
   }
 
   /**

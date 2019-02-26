@@ -91,6 +91,31 @@ class Gebruiker {
   }
 
   /**
+   * getVerkiesbareAanvragen
+   *
+   * @return Verkiesbare[]|bool
+   */
+  public function getVerkiesbareAanvragen() {
+    $stmt = $this->conn->prepare("SELECT * FROM `verkiesbare` WHERE gebruiker_id = :gebruiker AND gekeurd = 0");
+
+    $gebruikerID = $this->getID();
+    
+    $stmt->bindParam(":gebruiker", $gebruikerID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $verkiesbare) {
+        array_push($gebruikers, Verkiesbare::fromArray($this->conn, $verkiesbare));
+      }
+      return $gebruikers;
+    } 
+    
+    return false;
+  }
+
+  /**
    * verkiesbaarStellen
    *
    * @param  Periode $periode
