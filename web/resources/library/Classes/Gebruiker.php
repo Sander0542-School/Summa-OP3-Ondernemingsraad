@@ -87,7 +87,44 @@ class Gebruiker {
    * @return bool
    */
   public function isBeheerder() {
-    return $this->record['recht'] == 1;
+    return $this->record['recht'] != 0;
+  }
+
+  /**
+   * setBeheerder
+   *
+   * @param  int $recht
+   *
+   * @return bool
+   */
+  public function setRecht($recht) {
+    $stmt = $this->conn->prepare("UPDATE gebruikers SET recht = :recht WHERE id = :uID");
+
+    $gebruikerID = $this->getID();
+
+    $stmt->bindParam(":recht", $recht);
+    $stmt->bindParam(":uID", $gebruikerID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  /**
+   * getType
+   *
+   * @return string
+   */
+  public function getType() {
+    if ($this->isBeheerder()) {
+      return "Beheerder";
+    }
+    
+    return "Gebruiker";
   }
 
   /**
@@ -196,6 +233,28 @@ class Gebruiker {
       if (Gebruiker::fromID($conn, $_SESSION["userID"]) !== false) {
         return true;
       }
+    }
+
+    return false;
+  }
+
+  /**
+   * isIngelogd
+   *
+   * @param  PDO $conn
+   *
+   * @return Gebruiker[]|bool
+   */
+  public static function getGebruikers(PDO $conn) {
+    $stmt = $conn->prepare("SELECT * FROM gebruikers");
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $gebruikers = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $gebruiker) {
+        array_push($gebruikers, new Gebruiker($conn, $gebruiker));
+      }
+      return $gebruikers;
     }
 
     return false;

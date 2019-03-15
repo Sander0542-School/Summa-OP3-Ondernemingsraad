@@ -37,7 +37,7 @@ if (!isset($_POST['periode'])) {
         <div class="row">
 
 <?php
-$periodes = Periode::getPeriodes($_CONNECTION);
+$periodes = Periode::getPeriodes($_CONNECTION, Periode::PERIODES_HUIDIG);
 
 if ($periodes !== false) {
   foreach ($periodes as $periode) {
@@ -93,10 +93,13 @@ if ($periodes !== false) {
   $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
   
   if ($periode !== false) {
+    $verkiesbaren = $periode->getVerkiesbare();
+
+    if ($verkiesbaren !== false) {
     /**
      * @var $verkiesbare Verkiesbare
      */
-    foreach ($periode->getVerkiesbare() as $verkiesbare) {
+      foreach ($verkiesbaren as $verkiesbare) {
   ?>
   
       <div class="col s12 m4 l3">
@@ -109,12 +112,13 @@ if ($periodes !== false) {
             <p><?=$verkiesbare->omschrijving?></p>
           </div>
         <div class="card-action">
-          <a class="primary-color-text" href="# " onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>')">Stem</a>
+          <a class="primary-color-text" href="# " onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>' )">Stem</a>
         </div>
         </div>
       </div>
 
   <?php
+      }
     }
   }
 }
@@ -133,7 +137,7 @@ if ($periodes !== false) {
       <input type="hidden" value="<?=$_POST["periode"]?>" name="periode"/>
       <div class="modal-content">
         <h4>Stemmen</h4>
-        <p >Weet u zeker dat u op <b name="verkiesbareNaam" id="verkiesbareNaam"></b> wilt stemmen?</p>
+        <p >Weet u zeker dat u op <b id="verkiesbareNaam"></b> wilt stemmen?</p>
 
       </div>
       <div class="modal-footer">

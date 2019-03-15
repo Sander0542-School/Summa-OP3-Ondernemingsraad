@@ -59,7 +59,7 @@ if (isset($_POST["description"]) && isset($_POST["periode"])) {
                     <select id="periode" name="periode" required>
                       <option value="" disabled selected>Kies een periode</option>
 <?php
-$periodes = Periode::getPeriodes($_CONNECTION, false);
+$periodes = Periode::getPeriodes($_CONNECTION, Periode::PERIODES_AANKOMEND);
 
 if ($periodes !== false) {
   foreach ($periodes as $periode) {

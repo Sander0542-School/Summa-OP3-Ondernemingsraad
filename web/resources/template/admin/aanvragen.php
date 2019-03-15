@@ -1,3 +1,26 @@
+<?php
+if (isset($_POST['verkiesbareID'])){
+  $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
+  if ($verkiesbare !== false) {
+    $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
+    if ($acceptaanvraag = Verkiesbare::acceptAanvraag($_CONNECTION, $_POST['verkiesbareID'])) {
+      $modal = [
+        'title' => 'Geaccepteerd!',
+        'content' => 'U heeft '.$verkiesbareNaam.' succesvol goedgekeurd.',
+        'autoLoad' => true
+      ];
+    } else {
+      $modal = [
+        'title' => 'Fout',
+        'content' => 'Er is een fout opgetreden tijdens het goedkeuren. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+        'autoLoad' => true
+      ];
+    }
+  (new Modal($modal))->show();
+  }
+}
+?>
+
 <div id="aanvragen" class="row">
   <div class="col l1"></div>
   <div class="col s12 l10">
@@ -6,7 +29,8 @@
 <?php
 $verkiesbare = Verkiesbare::getAanvraag($_CONNECTION);
 
-if ($periode !== false) {
+if ($verkiesbare !== false) {
+
   /**
    * @var $verkiesbare Verkiesbare
    */
@@ -40,17 +64,9 @@ if ($periode !== false) {
   <form action="/admin#aanvragen" method="post">
     <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
     <div class="modal-content">
-      <div class="row">
-        <div class="col s12 l7">
-          <p>
-            <span>Naam: <span id="verkiesbareNaam"></span></span><br/>
-            <span>Omschrijving:<br/><span id="verkiesbareOmschrijving"></span></span>
-          </p>
-        </div>
-      </div>
       <h4>Aanvraag</h4>
-      <p >Weet u zeker dat u  wilt goedkeuren?</p>
-      <p >Omschrijving: <b name="omschrijving" id="omschrijving"></b></p>
+      <p >Weet u zeker dat u <span id="verkiesbareNaam"></span> wilt goedkeuren?</p>
+      <p >Omschrijving:  <span id="verkiesbareOmschrijving"></span></p>
     </div>
     <div class="modal-footer">
       <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Goedkeuren</button>
@@ -58,3 +74,4 @@ if ($periode !== false) {
     </div>
   </form>
 </div>
+

@@ -1,6 +1,10 @@
 <?php
 
 class Periode {
+  const PERIODES_ALL = 0;
+  const PERIODES_HUIDIG = 1;
+  const PERIODES_AANKOMEND = 2;
+
   private $conn;
   private $record;
 
@@ -52,6 +56,25 @@ class Periode {
    */
   public function getEindDatum($format = null) {
     return DateTime::createFromFormat('Y-m-d H:i:s', $this->record["eind"])->format($format !== null ? $format : Variables::DATE_FORMAT);
+  }
+
+  public function updatePeriode($naam, $beginDatum, $eindDatum) {
+    $stmt = $this->conn->prepare("UPDATE `periodes` SET `naam` = :naam, `begin` = :beginDatum, `eind` = :eindDatum  WHERE `id` = :periodeID");
+
+    $periodeID = $this->getID();
+
+    $stmt->bindParam(":periodeID", $periodeID);
+    $stmt->bindParam(":naam", $naam);
+    $stmt->bindParam(":beginDatum", $beginDatum);
+    $stmt->bindParam(":eindDatum", $eindDatum);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return true;
+        }
+
+    return false;
   }
 
   /**
@@ -128,11 +151,18 @@ class Periode {
    *
    * @return Periode[]|false
    */
-  public static function getPeriodes(PDO $conn, bool $showAll = true) {
+  public static function getPeriodes(PDO $conn, int $type = self::PERIODES_ALL) {
 
-    $sql = "SELECT * FROM periodes ORDER BY begin ASC";
-    if ($showAll == false) {
-      $sql = "SELECT * FROM periodes WHERE NOW() BETWEEN DATE(begin) - INTERVAL 3 MONTH AND DATE(begin) - INTERVAL 1 WEEK ORDER BY begin ASC";
+    switch ($type) {
+      case self::PERIODES_AANKOMEND:
+        $sql = "SELECT * FROM periodes WHERE NOW() BETWEEN DATE(begin) - INTERVAL 3 MONTH AND DATE(begin) - INTERVAL 1 WEEK ORDER BY begin ASC";
+        break;
+      case self::PERIODES_HUIDIG:
+        $sql = "SELECT * FROM periodes WHERE NOW() BETWEEN begin AND eind ORDER BY begin ASC";
+        break;
+      default:
+        $sql = "SELECT * FROM periodes ORDER BY begin ASC";
+        break;
     }
 
     $stmt = $conn->prepare($sql);

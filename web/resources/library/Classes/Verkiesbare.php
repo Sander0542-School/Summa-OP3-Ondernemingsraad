@@ -118,4 +118,17 @@ class Verkiesbare {
     return false;
   }
 
+  public static function acceptAanvraag(PDO $conn, $verkiesbareID) {
+    $stmt = $conn->prepare("UPDATE `verkiesbare` SET `gekeurd` = 1 WHERE `id` = :verkiesbareID");
+    $stmt->bindParam(":verkiesbareID", $verkiesbareID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return true;
+        }
+
+    return false;
+  }
+
 }
