@@ -44,15 +44,15 @@ if ($periodes !== false) {
                   <input type="hidden" name="periodeID" value="<?=$periode->getID()?>">
                   <div class="row">
                     <div class="input-field col s12">
-                      <input id="periode_<?=$periode->getID()?>_naam" name="periodeNaam" type="text" class="validate" value="<?=$periode->getNaam()?>">
+                      <input id="periode_<?=$periode->getID()?>_naam" name="periodeNaam" type="text" value="<?=$periode->getNaam()?>">
                       <label for="periode_<?=$periode->getID()?>_naam">Periode Naam</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="periode_<?=$periode->getID()?>_begin_datum" name="periodeBeginDatum" value="<?=$periode->getBeginDatum()?>" type="text" class="datepicker validate">
+                      <input id="periode_<?=$periode->getID()?>_begin_datum" name="periodeBeginDatum" data-date="<?=$periode->getBeginDatum('Y-m-d')?>" type="text" class="datepicker">
                       <label for="periode_<?=$periode->getID()?>_begin_datum">Begin Datum</label>
                     </div>
                     <div class="input-field col s12">
-                      <input id="periode_<?=$periode->getID()?>_eind_datum" name="periodeEindDatum" value="<?=$periode->getEindDatum()?>" type="text" class="datepicker validate">
+                      <input id="periode_<?=$periode->getID()?>_eind_datum" name="periodeEindDatum" data-date="<?=$periode->getEindDatum('Y-m-d')?>" type="text" class="datepicker">
                       <label for="periode_<?=$periode->getID()?>_eind_datum">Eind Datum</label>
                     </div>
                     <button class="btn waves-effect waves-light" type="submit" name="action">Updaten

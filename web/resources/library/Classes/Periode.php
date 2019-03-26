@@ -179,6 +179,28 @@ class Periode {
     return false;
   }
 
+  public static function getHuidige(PDO $conn) {
+    $stmt = $conn->prepare("SELECT * FROM periodes WHERE NOW() BETWEEN begin AND eind ORDER BY begin ASC LIMIT 1");
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return new Periode($conn, $stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    return false;
+  }
+
+  public static function getOpkomende(PDO $conn) {
+    $stmt = $conn->prepare("SELECT * FROM periodes WHERE begin > NOW() ORDER BY begin ASC LIMIT 1");
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return new Periode($conn, $stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    return false;
+  }
+
   /**
    * fromID
    *

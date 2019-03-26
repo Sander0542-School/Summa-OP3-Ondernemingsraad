@@ -5,6 +5,7 @@ class Verkiesbare {
   private $record;
 
   public $omschrijving;
+  public $status;
 
   /**
    * __construct
@@ -17,6 +18,7 @@ class Verkiesbare {
     $this->conn = $conn;
 
     $this->omschrijving = $record['omschrijving'];
+    $this->status = $record['gekeurd'];
   }
 
   /**
@@ -35,6 +37,17 @@ class Verkiesbare {
    */
   public function getPeriode() {
     return Periode::fromID($this->conn, $this->record["periode_id"]);
+  }
+
+  public function getStatus() {
+    switch ($this->status) {
+      case 1:
+        return "Goedgekeurd";
+      case 2:
+        return "Afgekeurd";
+      default:
+        return "In Afwachting";
+    }
   }
 
   /**

@@ -133,7 +133,7 @@ class Gebruiker {
    * @return Verkiesbare[]|bool
    */
   public function getVerkiesbareAanvragen() {
-    $stmt = $this->conn->prepare("SELECT * FROM `verkiesbare` WHERE gebruiker_id = :gebruiker AND gekeurd = 0");
+    $stmt = $this->conn->prepare("SELECT * FROM `verkiesbare` WHERE gebruiker_id = :gebruiker");
 
     $gebruikerID = $this->getID();
     
@@ -161,22 +161,60 @@ class Gebruiker {
    * @return bool
    */
   public function verkiesbaarStellen(Periode $periode, $omschrijving) {
-    $stmt = $this->conn->prepare("INSERT INTO `verkiesbare` (gebruiker_id, periode_id, omschrijving) VALUES (:gebruiker, :periode, :omschrijving)");
+    try {
+      $stmt = $this->conn->prepare("INSERT INTO `verkiesbare` (gebruiker_id, periode_id, omschrijving) VALUES (:gebruiker, :periode, :omschrijving)");
 
-    $gebruikerID = $this->getID();
-    $periodeID = $periode->getID();
-    
+      $gebruikerID = $this->getID();
+      $periodeID = $periode->getID();
+      
+      $stmt->bindParam(":gebruiker", $gebruikerID);
+      $stmt->bindParam(":periode", $periodeID);
+      $stmt->bindParam(":omschrijving", $omschrijving);
+
+      $stmt->execute();
+
+      if ($stmt->rowCount() > 0) {
+        return true;
+      }
+    } catch (PDOException $exception) { }
+
+    return false;
+  }
+
+  public function checkGestemd(Verkiesbare $verkiesbare) {
+    $stmt = $this->conn->prepare("SELECT * FROM `stemmen` WHERE `gebruiker` = :gebruiker AND `verkiesbare_id` = :verkiesbareID");
+
+    $verkiesbareID = $verkiesbare->getID();
+    $gebruikerID = $this->getEncryptedID();
+
     $stmt->bindParam(":gebruiker", $gebruikerID);
-    $stmt->bindParam(":periode", $periodeID);
-    $stmt->bindParam(":omschrijving", $omschrijving);
+    $stmt->bindParam(":verkiesbareID", $verkiesbareID);
 
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
-      return true;
+      return false;
     }
 
-    return false;
+    return true;
+  }
+
+  public function getAantalGestemd(Periode $periode) {
+    $stmt = $this->conn->prepare("SELECT COUNT(*) as stemmen FROM stemmen INNER JOIN verkiesbare ON verkiesbare.id = stemmen.verkiesbare_id INNER JOIN periodes ON verkiesbare.periode_id = periodes.id WHERE stemmen.gebruiker = :gebruiker AND periodes.id = :periodeID");
+   
+    $periodeID = $periode->getID();
+    $gebruikerID = $this->getEncryptedID();
+
+    $stmt->bindParam(":gebruiker", $gebruikerID);
+    $stmt->bindParam(":periodeID", $periodeID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return $stmt->fetch(PDO::FETCH_ASSOC)['stemmen'];
+    }
+
+    return 0;
   }
 
   /**
@@ -246,7 +284,7 @@ class Gebruiker {
    * @return Gebruiker[]|bool
    */
   public static function getGebruikers(PDO $conn) {
-    $stmt = $conn->prepare("SELECT * FROM gebruikers");
+    $stmt = $conn->prepare("SELECT * FROM `gebruikers`");
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
@@ -259,6 +297,7 @@ class Gebruiker {
 
     return false;
   }
+
 }
 
 ?>

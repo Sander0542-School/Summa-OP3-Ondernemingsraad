@@ -18,7 +18,7 @@ if (isset($_POST["description"]) && isset($_POST["periode"])) {
     } else {
       $modal = [
         'title' => 'Fout',
-        'content' => 'Er is een fout opgetreden tijdens het verkiesbaar stellen.',
+        'content' => 'Er is een fout opgetreden tijdens het verkiesbaar stellen voor deze verkiezing.',
         'autoLoad' => true
       ];
     }
@@ -98,8 +98,8 @@ if ($aanvragen !== false) {
               <thead>
                 <tr>
                   <th>Periode</th>
-                  <th>Datum</th>
                   <th>Omschrijving</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
@@ -111,8 +111,8 @@ if ($aanvragen !== false) {
 ?>
                 <tr>
                   <td><?=$aanvraag->getPeriode()->getNaam()?></td>
-                  <td><?=$aanvraag->getPeriode()->getBeginDatum()?> - <?=$aanvraag->getPeriode()->getEindDatum()?></td>
                   <td><?=$aanvraag->omschrijving?></td>
+                  <td><?=$aanvraag->getStatus()?></td>
                 </tr>
 <?php
   }

@@ -10,18 +10,29 @@ $stemmen = Stemmen::getZetels($_CONNECTION);
 
 if (isset($_POST["verkiesbareID"])) {
   $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
+
   if ($verkiesbare !== false) {
     $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
-    if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
-      $modal = [
-        'title' => 'Gestemd!',
-        'content' => 'U heeft succesvol gestemd op '.$verkiesbareNaam,
-        'autoLoad' => true
-      ];
+
+    if ($checkStem = $_GEBRUIKER->checkGestemd($verkiesbare)) {
+
+      if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
+        $modal = [
+          'title' => 'Gestemd!',
+          'content' => 'U heeft succesvol gestemd op '.$verkiesbareNaam,
+          'autoLoad' => true
+        ];
+      } else {
+        $modal = [
+          'title' => 'Niet Gestemd',
+          'content' => 'Er is een fout opgetreden tijdens het stemmen. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+          'autoLoad' => true
+        ];
+      }
     } else {
       $modal = [
-        'title' => 'Niet Gestemd',
-        'content' => 'Er is een fout opgetreden tijdens het stemmen. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+        'title' => 'Fout',
+        'content' => 'U heeft al gestemd op '.$verkiesbareNaam,
         'autoLoad' => true
       ];
     }
