@@ -218,6 +218,27 @@ class Gebruiker {
   }
 
   /**
+   * getZetels
+   *
+   * @param  PDO $conn
+   *
+   * @return int
+   */
+  public function getZetels(PDO $conn) {
+    
+    $stmt = $conn->prepare("SELECT * FROM `groepen`");
+    
+    $gebruikerID = $this->getID();
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return $stmt->fetch(PDO::FETCH_ASSOC)['zetels'];
+    }
+    return 0;
+  }
+
+  /**
    * fromID
    *
    * @param  PDO $conn

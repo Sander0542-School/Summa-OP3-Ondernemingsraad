@@ -28,6 +28,12 @@ if ($periodeHuidig !== false) {
                   Eind: <?=$periodeHuidig->getEindDatum()?>
                 </p>
               </div>
+              <div class="card-action">
+                <a href="#" onclick="document.getElementById('huidigePeriode').submit()" class="accent-color-text">Stemmen</a>
+                <form id="huidigePeriode" method="post" action="/stemmen">
+                  <input type="hidden" name="periode" value="<?=$periodeHuidig->getID()?>"/>
+                </form>
+              </div>
             </div>
           </div>
 
