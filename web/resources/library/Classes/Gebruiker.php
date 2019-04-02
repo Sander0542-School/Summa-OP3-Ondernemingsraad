@@ -53,6 +53,18 @@ class Gebruiker {
     return $this->voornaam . ' ' . $this->achternaam;
   }
 
+  public function getGroepen() {
+    return explode(',', $this->record['groepen']);
+  }
+
+  public function getPropositie($column = 'naam') {
+    $groepenPDO = "'".implode("', '", $this->getGroepen())."'";
+    $stmt = $this->conn->prepare("SELECT * FROM proposities WHERE code IN (".$groepenPDO.")");
+    $stmt->execute();
+    
+    return $stmt->fetch(PDO::FETCH_ASSOC)[$column];
+  }
+
   /**
    * heeftGestemd
    *
@@ -215,6 +227,28 @@ class Gebruiker {
     }
 
     return 0;
+  }
+
+  public function getTotaalStemmen(Periode $periode) {
+    $propositieID = $this->getPropositie('id');
+    $periodeID = $periode->getID();
+
+    $stmt = $this->conn->prepare("SELECT * FROM groepen WHERE propositie_id = :propositieID AND periode_id = :periodeID");
+
+    $stmt->bindParam(":propositieID", $propositieID);
+    $stmt->bindParam(":periodeID", $periodeID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return $stmt->fetch(PDO::FETCH_ASSOC)['zetels'];
+    }
+
+    return 0;
+  }
+
+  public function magStemmen(Periode $periode) {
+    return $this->getAantalGestemd($periode) < $this->getTotaalStemmen($periode);
   }
 
   /**

@@ -1,0 +1,9 @@
+{
+  "config": {
+    "vendor-dir": "resources/composer/vendor"
+  },
+  "require": {
+    "onelogin/php-saml": "^3.1",
+    "mpdf/mpdf": "^8.0"
+  }
+}

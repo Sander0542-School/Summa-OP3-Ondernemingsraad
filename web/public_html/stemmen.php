@@ -6,33 +6,39 @@ $pageTitle = 'Stemmen';
 
 include(TEMPLATE_PATH . '/header.php');
 
-$stemmen = Stemmen::getZetels($_CONNECTION);
-
 if (isset($_POST["verkiesbareID"])) {
   $verkiesbare = Verkiesbare::fromID($_CONNECTION, $_POST["verkiesbareID"]);
 
   if ($verkiesbare !== false) {
     $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
 
-    if ($checkStem = $_GEBRUIKER->checkGestemd($verkiesbare)) {
+    if ($_GEBRUIKER->magStemmen($verkiesbare->getPeriode())) {
+      if ($checkStem = $_GEBRUIKER->checkGestemd($verkiesbare)) {
 
-      if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
-        $modal = [
-          'title' => 'Gestemd!',
-          'content' => 'U heeft succesvol gestemd op '.$verkiesbareNaam,
-          'autoLoad' => true
-        ];
+        if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
+          $modal = [
+            'title' => 'Gestemd!',
+            'content' => 'U heeft succesvol gestemd op '.$verkiesbareNaam,
+            'autoLoad' => true
+          ];
+        } else {
+          $modal = [
+            'title' => 'Niet Gestemd',
+            'content' => 'Er is een fout opgetreden tijdens het stemmen. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+            'autoLoad' => true
+          ];
+        }
       } else {
         $modal = [
-          'title' => 'Niet Gestemd',
-          'content' => 'Er is een fout opgetreden tijdens het stemmen. Als dit vaker gebeurt kunt u contact opnemen met de beheerders van dit systeem',
+          'title' => 'Fout',
+          'content' => 'U heeft al gestemd op '.$verkiesbareNaam,
           'autoLoad' => true
         ];
       }
     } else {
       $modal = [
         'title' => 'Fout',
-        'content' => 'U heeft al gestemd op '.$verkiesbareNaam,
+        'content' => 'U mag niet meer stemmen, omdat u al heeft gestemd',
         'autoLoad' => true
       ];
     }
@@ -81,64 +87,73 @@ if ($periodes !== false) {
 
 <?php 
 } else {
-  ?>
+  $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
   
+  if ($periode !== false) {
+    ?>
+
   <div class="row">
     <div class="col l1"></div>
     <div class="col s12 l10">
   
-    <div class="row">
-      <div class="col s12 m4 l3">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">Aantal stemmen</span>
-            <p>U heeft <?=Stemmen::getZetels($_CONNECTION)?> stem(men) over</p>
+      <div class="row">
+        <div class="col s12 m4 l3">
+          <div class="card blue-grey darken-1">
+            <div class="card-content white-text">
+              <span class="card-title">Aantal stemmen</span>
+              <p>U heeft <?=$_GEBRUIKER->getAantalGestemd($periode)?> van de <?=$_GEBRUIKER->getTotaalStemmen($periode)?> keer gestemd</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  
-    <div class="row flex">
-  
-  <?php
-  $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
-  
-  if ($periode !== false) {
+
+<?php
     $verkiesbaren = $periode->getVerkiesbare();
 
     if ($verkiesbaren !== false) {
     /**
      * @var $verkiesbare Verkiesbare
      */
+?>
+    
+      <div class="row flex">
+
+<?php
       foreach ($verkiesbaren as $verkiesbare) {
-  ?>
+?>
   
-      <div class="col s12 m4 l3">
-        <div class="card">
-          <div class="card-image">
-            <img src="/images/defualt.jpg">
+        <div class="col s12 m4 l3">
+          <div class="card">
+            <div class="card-image">
+              <img src="/images/defualt.jpg">
+            </div>
+            <div class="card-content">
+              <span class="card-title"><?=$verkiesbare->getGebruiker()->getNaam()?></span>
+              <p><?=$verkiesbare->omschrijving?></p>
+            </div>
+          <div class="card-action">
+            <a class="primary-color-text" href="# " onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>' )">Stem</a>
           </div>
-          <div class="card-content">
-            <span class="card-title"><?=$verkiesbare->getGebruiker()->getNaam()?></span>
-            <p><?=$verkiesbare->omschrijving?></p>
           </div>
-        <div class="card-action">
-          <a class="primary-color-text" href="# " onclick="openStemModal(<?=$verkiesbare->getID()?>, '<?=$verkiesbare->getGebruiker()->getNaam()?>' )">Stem</a>
         </div>
-        </div>
+
+<?php
+      }
+?>
+
       </div>
 
-  <?php
-      }
+<?php
     }
-  }
-}
 ?>
 
     </div>
-
   </div>
-</div>
+
+<?php
+  }
+}
+?>
 
   <!-- Modal Structure Stemmen -->
   
