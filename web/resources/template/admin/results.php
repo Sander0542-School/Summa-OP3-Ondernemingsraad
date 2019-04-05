@@ -13,6 +13,7 @@ if ($periodes !== false) {
 ?>
 
           <div class="col s12 l4">
+          <form action="/export" method="post">
             <div class="card">
               <div class="card-content">
                 <span class="card-title"><?=$periode->getNaam()?></span>
@@ -20,9 +21,10 @@ if ($periodes !== false) {
                 <p>Aantal Verkiesbaar: <?=($verkiesbaar !== false ? count($verkiesbaar) : 0)?></p>
               </div>
               <div class="card-action">
-                <a class="primary-color-text" href="#">Exporteer</a>
+              <button type="submit" target="_blank" class="waves-effect waves-green btn-flat modal-close green-text">Exporteer</button>
               </div>
             </div>
+            </form>
           </div>
 
 <?php

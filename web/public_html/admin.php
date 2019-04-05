@@ -22,6 +22,8 @@ include(TEMPLATE_PATH . '/header.php');
 
   include(TEMPLATE_PATH . '/admin/periodes.php');
 
+  include(TEMPLATE_PATH . '/admin/groepen.php');
+
   include(TEMPLATE_PATH . '/admin/gebruikers.php');
 
 ?>
