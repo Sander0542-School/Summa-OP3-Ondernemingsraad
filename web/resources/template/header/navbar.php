@@ -30,10 +30,8 @@ if ($_SERVER["PHP_SELF"] == '/admin.php') {
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
         <li class="navbar-empty"><a href=""></a></li>
-        <li class="tab"><a class="active" href="#results">Resultaten</a></li>
-        <li class="tab"><a href="#aanvragen">Aanvragen</a></li>
         <li class="tab"><a href="#periodes">Periodes</a></li>
-        <li class="tab"><a href="#groepen">Groepen</a></li>
+        <li class="tab"><a href="#aanvragen">Aanvragen</a></li>
         <li class="tab"><a href="#gebruikers">Gebruikers</a></li>
       </ul>
     </div>

@@ -68,7 +68,28 @@ if ($periodes !== false) {
   }
 }
 ?>
+          <div class="col s12 l4">
+  <a class="btn-floating btn-large waves-effect waves-light red" onclick="nieuwePeriode()" ><i class="material-icons">add</i></a>
+  </div>
 
         </div>
       </div>
     </div>
+
+    <!-- Modal Structure Niewe Periode -->
+  
+  <div id="modalStemmen" class="modal modal-small">
+    <form action="/stemmen" method="post">
+      <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
+      <input type="hidden" value="<?=$_POST["periode"]?>" name="periode"/>
+      <div class="modal-content">
+        <h4>Stemmen</h4>
+        <p >Weet u zeker dat u op <b id="verkiesbareNaam"></b> wilt stemmen?</p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Stem</button>
+        <a href="#" class="modal-close waves-effect waves-red red-text btn-flat left">Annuleren</a>
+      </div>
+    </form>
+  </div>

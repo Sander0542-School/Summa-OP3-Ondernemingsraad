@@ -16,13 +16,10 @@ include(TEMPLATE_PATH . '/header.php');
 
 <?php
 
-  include(TEMPLATE_PATH . '/admin/results.php');
+  // include(TEMPLATE_PATH . '/admin/periodes.php');
+  include(TEMPLATE_PATH . '/admin/periodes2.php');
 
   include(TEMPLATE_PATH . '/admin/aanvragen.php');
-
-  include(TEMPLATE_PATH . '/admin/periodes.php');
-
-  include(TEMPLATE_PATH . '/admin/groepen.php');
 
   include(TEMPLATE_PATH . '/admin/gebruikers.php');
 

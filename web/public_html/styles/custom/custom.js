@@ -24,4 +24,7 @@ function openAanvraagModal(verkiesbareID, verkiesbareNaam, omschrijving) {
   $('#verkiesbareOmschrijving').text(omschrijving);
 }
 
+function nieuwePeriode() {
+  $('#modalNieuwePeriode').modal('open');
+}
 

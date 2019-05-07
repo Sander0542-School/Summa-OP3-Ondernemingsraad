@@ -50,6 +50,20 @@ class Verkiesbare {
     }
   }
 
+  public function getAantalStemmen() {
+    $verkiesbareID = $this->getID();
+    $stmt = $this->conn->prepare("SELECT COUNT(`id`) as aantal FROM `stemmen` WHERE `verkiesbare_id` = :vID");
+    $stmt->bindParam(":vID", $verkiesbareID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return $stmt->fetch(PDO::FETCH_ASSOC)['aantal'];
+    }
+
+    return 0;
+  }
+
   /**
    * getID
    *

@@ -21,7 +21,7 @@ if ($periodes !== false) {
                 <p>Aantal Verkiesbaar: <?=($verkiesbaar !== false ? count($verkiesbaar) : 0)?></p>
               </div>
               <div class="card-action">
-              <button type="submit" target="_blank" class="waves-effect waves-green btn-flat modal-close green-text">Exporteer</button>
+              <a href="/export?id=<?=$periode->getID()?>" target="_blank" class="waves-effect waves-green btn-flat modal-close green-text">Exporteer</a>
               </div>
             </div>
             </form>
