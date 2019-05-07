@@ -27,8 +27,6 @@ if (isset($_GET['key'], $_GET['id'])) {
  
       $graph = new Graph\PieGraph(500,500);
       $graph->SetShadow();
-      
-      $graph->title->Set("Verkiezings uitslag");
 
       //$graph->title->Set($periode->getNaam());
       
