@@ -18,9 +18,9 @@ include(TEMPLATE_PATH . '/header.php');
 
   if (isset($_GET["periode"]) && !is_null($periode = Periode::fromID($_CONNECTION, $_GET['periode']))) {
 
-    if (isset($_POST["periode"], $_FILES["excel"])) {
+    if (isset($_POST["periode"], $_FILES["excel"]) && $_POST['periode'] == $_GET['periode']) {
 
-
+      ExcelImport::LaadGebruikers($_CONNECTION, $_FILES['excel'], $periode->getID());
 
     }
 

@@ -2,7 +2,25 @@
 
 require('../resources/config.php');
 
-$mpdf = new \Mpdf\Mpdf();
+$defaultConfig = (new Mpdf\Config\ConfigVariables())->getDefaults();
+$fontDirs = $defaultConfig['fontDir'];
+
+$defaultFontConfig = (new Mpdf\Config\FontVariables())->getDefaults();
+$fontData = $defaultFontConfig['fontdata'];
+
+$mpdf = new \Mpdf\Mpdf([
+    'fontDir' => array_merge($fontDirs, [
+        __DIR__ . '/resources/font',
+    ]),
+    'fontdata' => $fontData + [
+        'MyriadProRegular' => [
+            'R' => 'MyriadProRegular.ttf',
+            'I' => 'MyriadProRegular.ttf',
+        ]
+    ],
+    'default_font' => 'MyriadProRegular'
+]);
+
 
 $periode = Periode::fromID($_CONNECTION, $_GET["id"]);
 
