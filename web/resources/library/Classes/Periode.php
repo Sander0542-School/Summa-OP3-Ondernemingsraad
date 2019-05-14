@@ -38,32 +38,17 @@ class Periode {
 
   public function getStemmer(Gebruiker $gebruiker) {
     $gebruikerID = $gebruiker->getGebruikersnaam();
+    $periodeID = $this->getID();
 
-    $stmt = $this->conn->prepare("SELECT * FROM periode_groepen WHERE gebruikerCode = :gebruikerID");
+    $stmt = $this->conn->prepare("SELECT * FROM periode_groepen WHERE gebruikerCode = :gebruikerID AND periodeID = :periodeID");
     $stmt->bindParam(":gebruikerID", $gebruikerID);
+    $stmt->bindParam(":periodeID", $periodeID);
     $stmt->execute();
 
     if ($stmt->rowCount() > 0) {
       return PeriodeGroep::fromArray($this->conn, $stmt->fetch(PDO::FETCH_ASSOC));
     }
 
-    return false;
-  }
-
-  public static function addStem(PDO $conn) {
-    $stmt = $conn->prepare("INSERT INTO `stemmen` (`verkiesbare_id`, `gebruiker`) VALUES (:verkiesbare, :gebruiker)");
-
-    $verkiesbareID = $verkiesbare->getID();
-    $gebruikerID = $gebruiker->getEncryptedID();
-
-    $stmt->bindParam(":verkiesbare", $verkiesbareID);
-    $stmt->bindParam(":gebruiker", $gebruikerID);
-
-    $stmt->execute();
-
-    if ($stmt->rowCount() > 0) {
-      return true;
-    }
     return false;
   }
 
@@ -168,12 +153,18 @@ class Periode {
    *
    * @return Verkiesbare[]|bool
    */
-  public function getVerkiesbare(Gebruiker $gebruiker) {
-    $stmt = $this->conn->prepare("SELECT * FROM verkiesbare WHERE periode_id = :periode AND gekeurd = 1 AND ");
+  public function getVerkiesbare(Gebruiker $gebruiker = null) {
+    if (!is_null($gebruiker)) {
+      $stmt = $this->conn->prepare("SELECT * FROM `verkiesbare` WHERE `gebruiker_id` IN( SELECT `id` FROM `gebruikers` WHERE `gebruikersnaam` IN ( SELECT `gebruikerCode` FROM `periode_groepen` WHERE `groep` LIKE ( SELECT `groep` FROM `periode_groepen` WHERE `gebruikerCode` = :gebruikerCode AND `periode_id` = :periodeID) ) )");
+    } else {
+      $stmt = $this->conn->prepare("SELECT * FROM verkiesbare WHERE periode_id = :periode AND gekeurd = 1 AND ");
+    }
 
     $periodeID = $this->getID();
+    $gebruikerCode = $gebruiker->getGebruikersnaam();
 
-    $stmt->bindParam(":periode", $periodeID);
+    $stmt->bindParam(":periodeID", $periodeID);
+    $stmt->bindParam(":gebruikerCode", $gebruikerCode);
 
     $stmt->execute();
 
@@ -205,6 +196,21 @@ class Periode {
       return $groepen;
     }
 
+    return false;
+  }
+
+  public static function addPeriode(PDO $conn, $naam, $beginDatum, $eindDatum) {
+    $stmt = $conn->prepare("INSERT INTO `periodes` (`naam`, `begin`, `eind`) VALUES (:naam, :beginDatum, :eindDatum)");
+
+    $stmt->bindParam(":naam", $naam);
+    $stmt->bindParam(":beginDatum", $beginDatum);
+    $stmt->bindParam(":eindDatum", $eindDatum);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return true;
+    }
     return false;
   }
 

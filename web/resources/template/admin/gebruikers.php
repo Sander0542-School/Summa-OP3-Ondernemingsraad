@@ -56,7 +56,6 @@ if ($gebruikers !== false) {
             <tr>
               <th>ID</th>
               <th>Naam</th>
-              <th>Groep</th>
               <th>Type</th>
               <th></th>
             </tr>
@@ -73,7 +72,6 @@ if ($gebruikers !== false) {
             <tr>
               <td><?=$gebruiker->getID()?></td>
               <td><?=$gebruiker->getNaam()?></td>
-              <td></td>
               <td><?=$gebruiker->getType()?></td>
               <td>
 <?php

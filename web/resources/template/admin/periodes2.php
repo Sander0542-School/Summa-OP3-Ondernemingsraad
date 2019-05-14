@@ -54,6 +54,8 @@ if ($periodes !== false) {
       <div class="modal-content">
         <h4>Nieuwe periode</h4>
         <p >Voer een begin en eind datum in voor de nieuwe periode</p>
+        <input name="periodeNaam" type="text">
+        <label for="periodeBeginDatum">Naam periode</label>
         <input name="periodeBeginDatum" type="text" class="datepicker">
         <label for="periodeBeginDatum">Begin Datum</label>
         <input name="periodeEindDatum" type="text" class="datepicker">

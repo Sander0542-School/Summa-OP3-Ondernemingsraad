@@ -1,20 +1,28 @@
 <?php
-  if (isset($_POST["NieuwePeriode"])){
-    if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
-      $modal = [
-        'title' => 'Aangemaakt!',
-        'content' => 'U heeft succesvol verkiezing aangemaakt',
-        'autoLoad' => true
-      ];
-  }
 
 require('../resources/config.php');
 
 if (!$_GEBRUIKER->isBeheerder()) {
   header("Location: /stemmen");
+  die();
 }
 
 $pageTitle = 'Beheerder';
+
+if (isset($_POST["NieuwePeriode"])) {
+
+  $periodeNaam = $_POST["periodeNaam"];
+  $periodeBegin = DateTime::createFromFormat("d-m-Y H:i:s", $_POST["periodeBeginDatum"]." 00:00:00")->format("Y-m-d H:i:s");
+  $periodeEind = DateTime::createFromFormat("d-m-Y H:i:s", $_POST["periodeEindDatum"]." 23:59:59")->format("Y-m-d H:i:s");
+
+  if ($newPeriode = Periode::addPeriode($_CONNECTION, $periodeNaam, $periodeBegin, $periodeEind)) {
+    $modal = [
+      'title' => 'Aangemaakt!',
+      'content' => 'U heeft succesvol verkiezing aangemaakt',
+      'autoLoad' => true
+    ];
+  }
+}
 
 include(TEMPLATE_PATH . '/header.php');
 
@@ -102,7 +110,7 @@ if ($stemmers) {
                       <td><?=$stemmer->getCode()?></td>
                       <td><?=$stemmer->getGroep()?></td>
                       <td><?=$stemmer->getStemmen()?></td>
-                      <td><?=($gebruiker ? ($gebruiker->getNaam()) : 'Niet gestemd')?></td>
+                      <td><?=($gebruiker ? ($periode->magStemmen($_GEBRUIKER) ? 'Niet gestemd' : 'Gestemd') : 'Niet gestemd')?></td>
                     </tr>
 <?php
   }

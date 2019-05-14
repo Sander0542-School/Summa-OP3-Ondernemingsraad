@@ -25,7 +25,7 @@ if ($_GEBRUIKER !== false) {
       </ul>
     </div>
 <?php
-if ($_SERVER["PHP_SELF"] == '/admin.php') {
+if ($_SERVER["PHP_SELF"] == '/admin.php' && !isset($_GET['periode'])) {
 ?>
     <div class="nav-content">
       <ul class="tabs tabs-transparent">
