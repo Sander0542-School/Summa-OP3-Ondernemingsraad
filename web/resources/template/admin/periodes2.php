@@ -48,17 +48,20 @@ if ($periodes !== false) {
 
     <!-- Modal Structure Niewe Periode -->
   
-  <div id="modalStemmen" class="modal modal-small">
-    <form action="/stemmen" method="post">
-      <input type="hidden" id="verkiesbareID" name="verkiesbareID"/>
-      <input type="hidden" value="<?=$_POST["periode"]?>" name="periode"/>
+  <div id="modalNieuwePeriode" class="modal modal-small">
+    <form action="/admin" method="post">
+      <input type="hidden" name="NieuwePeriode"/>
       <div class="modal-content">
-        <h4>Stemmen</h4>
-        <p >Weet u zeker dat u op <b id="verkiesbareNaam"></b> wilt stemmen?</p>
+        <h4>Nieuwe periode</h4>
+        <p >Voer een begin en eind datum in voor de nieuwe periode</p>
+        <input name="periodeBeginDatum" type="text" class="datepicker">
+        <label for="periodeBeginDatum">Begin Datum</label>
+        <input name="periodeEindDatum" type="text" class="datepicker">
+        <label for="periodeEindDatum">Eind Datum</label>
 
       </div>
       <div class="modal-footer">
-        <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Stem</button>
+        <button type="submit" class="waves-effect waves-green btn-flat modal-close green-text">Nieuwe periode aanmaken</button>
         <a href="#" class="modal-close waves-effect waves-red red-text btn-flat left">Annuleren</a>
       </div>
     </form>

@@ -36,6 +36,75 @@ class Periode {
     return $this->record["naam"];
   }
 
+  public function getStemmer(Gebruiker $gebruiker) {
+    $gebruikerID = $gebruiker->getGebruikersnaam();
+
+    $stmt = $this->conn->prepare("SELECT * FROM periode_groepen WHERE gebruikerCode = :gebruikerID");
+    $stmt->bindParam(":gebruikerID", $gebruikerID);
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return PeriodeGroep::fromArray($this->conn, $stmt->fetch(PDO::FETCH_ASSOC));
+    }
+
+    return false;
+  }
+
+  public static function addStem(PDO $conn) {
+    $stmt = $conn->prepare("INSERT INTO `stemmen` (`verkiesbare_id`, `gebruiker`) VALUES (:verkiesbare, :gebruiker)");
+
+    $verkiesbareID = $verkiesbare->getID();
+    $gebruikerID = $gebruiker->getEncryptedID();
+
+    $stmt->bindParam(":verkiesbare", $verkiesbareID);
+    $stmt->bindParam(":gebruiker", $gebruikerID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  public function aantalGestemd(Gebruiker $gebruiker) {
+    $gebruikerID = $gebruiker->getEncryptedID();
+
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID");
+    $stmt->bindParam(":gebruikerID", $gebruikerID);
+    $stmt->execute();
+
+    return $stmt->rowCount();
+  }
+
+  public function maxStemmen(Gebruiker $gebruiker) {
+    $stemmer = $this->getStemmer($gebruiker);
+    if ($stemmer) {
+      return $stemmer->getStemmen();
+    }
+
+    return 0;
+  }
+
+  public function magStemmen(Gebruiker $gebruiker) {
+    $aantalStemmen = $this->aantalGestemd($gebruiker);
+    $maxStemmen = $this->maxStemmen($gebruiker);
+
+    return $aantalStemmen < $maxStemmen;
+  }
+
+  public function heeftGestemd(Gebruiker $gebruiker, Verkiesbare $verkiesbare) {
+    $gebruikerID = $gebruiker->getEncryptedID();
+    $verkiesbareID = $verkiesbare->getID();
+
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID AND verkiesbare_id = :verkiesbareID");
+    $stmt->bindParam(":gebruikerID", $gebruikerID);
+    $stmt->bindParam(":verkiesbareID", $verkiesbareID);
+    $stmt->execute();
+
+    return $stmt->rowCount() == 0;
+  }
+
   /**
    * getBeginDatum
    *
@@ -99,8 +168,8 @@ class Periode {
    *
    * @return Verkiesbare[]|bool
    */
-  public function getVerkiesbare() {
-    $stmt = $this->conn->prepare("SELECT * FROM verkiesbare WHERE periode_id = :periode AND gekeurd = 1");
+  public function getVerkiesbare(Gebruiker $gebruiker) {
+    $stmt = $this->conn->prepare("SELECT * FROM verkiesbare WHERE periode_id = :periode AND gekeurd = 1 AND ");
 
     $periodeID = $this->getID();
 
@@ -114,6 +183,26 @@ class Periode {
         array_push($gebruikers, Verkiesbare::fromArray($this->conn, $verkiesbare));
       }
       return $gebruikers;
+    }
+
+    return false;
+  }
+
+  public function getStemmers() {
+    $stmt = $this->conn->prepare("SELECT * FROM periode_groepen WHERE periodeID = :periode");
+
+    $periodeID = $this->getID();
+
+    $stmt->bindParam(":periode", $periodeID);
+
+    $stmt->execute();
+
+    if ($stmt->rowCount() > 0) {
+      $groepen = array();
+      foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $periodeGroep) {
+        array_push($groepen, PeriodeGroep::fromArray($this->conn, $periodeGroep));
+      }
+      return $groepen;
     }
 
     return false;

@@ -66,15 +66,6 @@ class Gebruiker {
   }
 
   /**
-   * heeftGestemd
-   *
-   * @return bool
-   */
-  public function heeftGestemd() {
-    return $this->record['gestemd'] !== 0;
-  }
-
-  /**
    * getEncryptedID
    *
    * @return string

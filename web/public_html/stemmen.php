@@ -12,8 +12,8 @@ if (isset($_POST["verkiesbareID"])) {
   if ($verkiesbare !== false) {
     $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
 
-    if ($_GEBRUIKER->magStemmen($verkiesbare->getPeriode())) {
-      if ($checkStem = $_GEBRUIKER->checkGestemd($verkiesbare)) {
+    if ($verkiesbare->getPeriode()->magStemmen($_GEBRUIKER)) {
+      if ($verkiesbare->getPeriode()->heeftGestemd($_GEBRUIKER, $verkiesbare)) {
 
         if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
           $modal = [
@@ -101,14 +101,14 @@ if ($periodes !== false) {
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
               <span class="card-title">Aantal stemmen</span>
-              <p>U heeft <?=$_GEBRUIKER->getAantalGestemd($periode)?> van de <?=$_GEBRUIKER->getTotaalStemmen($periode)?> keer gestemd</p>
+              <p>U heeft <?=$periode->aantalGestemd($_GEBRUIKER)?> van de <?=$periode->maxStemmen($_GEBRUIKER)?> keer gestemd</p>
             </div>
           </div>
         </div>
       </div>
 
 <?php
-    $verkiesbaren = $periode->getVerkiesbare();
+    $verkiesbaren = $periode->getVerkiesbare($_GEBRUIKER);
 
     if ($verkiesbaren !== false) {
     /**

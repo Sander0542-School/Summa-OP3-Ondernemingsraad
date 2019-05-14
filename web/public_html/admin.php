@@ -1,4 +1,12 @@
 <?php
+  if (isset($_POST["NieuwePeriode"])){
+    if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
+      $modal = [
+        'title' => 'Aangemaakt!',
+        'content' => 'U heeft succesvol verkiezing aangemaakt',
+        'autoLoad' => true
+      ];
+  }
 
 require('../resources/config.php');
 
@@ -43,9 +51,6 @@ include(TEMPLATE_PATH . '/header.php');
               </div>
             </div>
 
-<?php
-if (!file_exists(RESOURCES_PATH . '/periodes/p'.$periode->getID().'.xlsx')) {
-?>
 
             <div class="card">
               <div class="card-content">
@@ -69,10 +74,6 @@ if (!file_exists(RESOURCES_PATH . '/periodes/p'.$periode->getID().'.xlsx')) {
               </div>
             </div>
 
-<?php
-}
-?>
-
           </div>
 
           <div class="col s12 m7 l8">
@@ -83,17 +84,31 @@ if (!file_exists(RESOURCES_PATH . '/periodes/p'.$periode->getID().'.xlsx')) {
                 <table>
                   <thead>
                     <tr>
-                      <th>Naam</th>
+                      <th>Code</th>
                       <th>Groep</th>
-                      <th>Gestemd</th>
+                      <th>Stemmen</th>
+                      <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
+<?php
+$stemmers = $periode->getStemmers();
+
+if ($stemmers) {
+  foreach ($stemmers as $stemmer) {
+    $gebruiker = $stemmer->getGebruiker();
+?>
                     <tr>
-                      <td>Naam</td>
-                      <td>Groep</td>
-                      <td>Gestemd</td>
+                      <td><?=$stemmer->getCode()?></td>
+                      <td><?=$stemmer->getGroep()?></td>
+                      <td><?=$stemmer->getStemmen()?></td>
+                      <td><?=($gebruiker ? ($gebruiker->getNaam()) : 'Niet gestemd')?></td>
                     </tr>
+<?php
+  }
+}
+?>
+
                   </tbody>
                 </table>
               </div>
