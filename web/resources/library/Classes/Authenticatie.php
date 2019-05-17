@@ -16,21 +16,19 @@ class Authenticatie
         if ($stmtCheck->rowCount() == 1) {
           try {
             //Gebruiker bestaat al
-            $stmtUpdate = $conn->prepare("UPDATE gebruikers SET voornaam = :voornaam, achternaam = :achternaam, groepen = :groepen WHERE gebruikersnaam = :userID");
+            $stmtUpdate = $conn->prepare("UPDATE gebruikers SET voornaam = :voornaam, achternaam = :achternaam WHERE gebruikersnaam = :userID");
             $stmtUpdate->bindParam(":userID", $session["samlNameId"]);
             $stmtUpdate->bindParam(":voornaam", $session["samlUserdata"]["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"][0]);
             $stmtUpdate->bindParam(":achternaam", $session["samlUserdata"]["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"][0]);
-            $stmtUpdate->bindParam(":groepen", implode(",", $session["samlUserdata"]["http://schemas.xmlsoap.org/claims/Group"]));
             $stmtUpdate->execute();
           } catch (Exception $exception) { }
         } else {
           try {
             //Gebruiker bestaat nog niet
-            $stmtNieuw = $conn->prepare("INSERT INTO gebruikers (gebruikersnaam, voornaam, achternaam, groepen) VALUES (:userID, :voornaam, :achternaam, :groepen);");
+            $stmtNieuw = $conn->prepare("INSERT INTO gebruikers (gebruikersnaam, voornaam, achternaam) VALUES (:userID, :voornaam, :achternaam);");
             $stmtNieuw->bindParam(":userID", $session["samlNameId"]);
             $stmtNieuw->bindParam(":voornaam", $session["samlUserdata"]["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname"][0]);
             $stmtNieuw->bindParam(":achternaam", $session["samlUserdata"]["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname"][0]);
-            $stmtNieuw->bindParam(":groepen", implode(",", $session["samlUserdata"]["http://schemas.xmlsoap.org/claims/Group"]));
             $stmtNieuw->execute();
             if ($stmtNieuw->rowCount() != 1) {
               return Authenticatie::LOGIN_INVALID_DATA;

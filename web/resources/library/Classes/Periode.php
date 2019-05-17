@@ -54,9 +54,11 @@ class Periode {
 
   public function aantalGestemd(Gebruiker $gebruiker) {
     $gebruikerID = $gebruiker->getEncryptedID();
+    $periodeID = $this->getID();
 
-    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID");
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID AND verkiesbare_id IN (SELECT periode_id FROM verkiesbare WHERE periode_id = :periodeID)");
     $stmt->bindParam(":gebruikerID", $gebruikerID);
+    $stmt->bindParam(":periodeID", $periodeID);
     $stmt->execute();
 
     return $stmt->rowCount();
