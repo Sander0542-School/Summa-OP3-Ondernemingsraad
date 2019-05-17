@@ -2,10 +2,10 @@
 
 class Connection
 {
-  private $host = "127.0.0.1";
-  private $db_name = "ondernemingsraad";
-  private $username = "root";
-  private $password = "";
+  private $host = "localhost";
+  private $db_name = "or-verk-test1";
+  private $username = "or-verk-test1";
+  private $password = "t@AehWn2iQ";
 
   private $conn;
 
