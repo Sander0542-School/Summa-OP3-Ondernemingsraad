@@ -56,7 +56,7 @@ class Periode {
     $gebruikerID = $gebruiker->getEncryptedID();
     $periodeID = $this->getID();
 
-    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID AND verkiesbare_id IN (SELECT periode_id FROM verkiesbare WHERE periode_id = :periodeID)");
+    $stmt = $this->conn->prepare("SELECT id FROM stemmen WHERE gebruiker = :gebruikerID AND verkiesbare_id IN (SELECT verkiesbare_id FROM verkiesbare WHERE periode_id = :periodeID)");
     $stmt->bindParam(":gebruikerID", $gebruikerID);
     $stmt->bindParam(":periodeID", $periodeID);
     $stmt->execute();
@@ -89,7 +89,7 @@ class Periode {
     $stmt->bindParam(":verkiesbareID", $verkiesbareID);
     $stmt->execute();
 
-    return $stmt->rowCount() == 0;
+    return $stmt->rowCount() != 0;
   }
 
   /**

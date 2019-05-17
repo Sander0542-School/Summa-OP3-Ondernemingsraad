@@ -13,7 +13,7 @@ if (isset($_POST["verkiesbareID"])) {
     $verkiesbareNaam = $verkiesbare->getGebruiker()->getNaam();
 
     if ($verkiesbare->getPeriode()->magStemmen($_GEBRUIKER)) {
-      if ($verkiesbare->getPeriode()->heeftGestemd($_GEBRUIKER, $verkiesbare)) {
+      if (!$verkiesbare->getPeriode()->heeftGestemd($_GEBRUIKER, $verkiesbare)) {
 
         if ($addstem = Stemmen::addStem($_CONNECTION, $verkiesbare, $_GEBRUIKER)) {
           $modal = [
