@@ -28,3 +28,10 @@ function nieuwePeriode() {
   $('#modalNieuwePeriode').modal('open');
 }
 
+function editPeriode(periodeNaam, periodeID, periodeBegin, periodeEind) {
+  $('#modelEditPeriode').modal('open');
+  $('#periodeID').val(periodeID);
+  $('#periodeNaam').text(periodeNaam);
+  $('#periodeBegin').text(periodeBegin);
+  $('#periodeEind').text(periodeEind);
+}
