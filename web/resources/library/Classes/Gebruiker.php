@@ -57,14 +57,6 @@ class Gebruiker {
     return explode(',', $this->record['groepen']);
   }
 
-  public function getPropositie($column = 'naam') {
-    $groepenPDO = "'".implode("', '", $this->getGroepen())."'";
-    $stmt = $this->conn->prepare("SELECT * FROM proposities WHERE code IN (".$groepenPDO.")");
-    $stmt->execute();
-    
-    return $stmt->fetch(PDO::FETCH_ASSOC)[$column];
-  }
-
   /**
    * getEncryptedID
    *
@@ -177,7 +169,7 @@ class Gebruiker {
       $stmt->execute();
 
       if ($stmt->rowCount() > 0) {
-        return true;
+        return $this->conn->lastInsertId();
       }
     } catch (PDOException $exception) { }
 

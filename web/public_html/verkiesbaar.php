@@ -6,10 +6,54 @@ $pageTitle = 'Verkiesbaar';
 
 include(TEMPLATE_PATH . '/header.php');
 
-if (isset($_POST["description"]) && isset($_POST["periode"])) {
+if (isset($_POST["description"]) && isset($_POST["periode"], $_FILES["profilePicture"])) {
   $periode = Periode::fromID($_CONNECTION, $_POST["periode"]);
   if ($periode !== false) {
-    if ($_GEBRUIKER->verkiesbaarStellen($periode, $_POST["description"])) {
+    $verkiesbareID = $_GEBRUIKER->verkiesbaarStellen($periode, $_POST["description"]);
+    if ($verkiesbareID !== false) {
+
+        $target_dir = "images/user/";
+        $target_file = $target_dir . basename($_FILES["profilePicture"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $uploadPath = $target_dir . 'u' . $verkiesbareID . '.png';
+        $errormsg = "Sorry, tijdens het uploaden van je foto is er iets fout gegaan!";
+        $check = getimagesize($_FILES["profilePicture"]["tmp_name"]);
+        if($check == false) {
+            $uploadOk = 0;
+        }
+        if ($_FILES["profilePicture"]["size"] > 5000000) {
+            $uploadOk = 0;
+        }
+        switch ($imageFileType) {
+            case "png":
+                $image = imagecreatefrompng($_FILES["profilePicture"]["tmp_name"]);
+                break;
+            case "jpg":
+            case "jpeg":
+                $image = imagecreatefromjpeg($_FILES["profilePicture"]["tmp_name"]);
+                break;
+            default:
+                $uploadOk = 0;
+        }
+        if ($uploadOk == 0) {
+          $modal = [
+            'title' => 'Fout',
+            'content' => 'Sorry, tijdens het uploaden van je foto is er iets fout gegaan!',
+            'autoLoad' => true
+          ];
+        } else {
+            if (imagepng($image, $uploadPath)) {
+                //Success TODO()
+            } else {
+              $modal = [
+                'title' => 'Fout',
+                'content' => 'Sorry, tijdens het uploaden van je foto is er iets fout gegaan!',
+                'autoLoad' => true
+              ];
+            }
+        }
+
       $modal = [
         'title' => 'Verkiesbaar Gesteld',
         'content' => 'U heeft zich verkiesbaar gesteld. Deze actie moet nu nog goed gekeurd worden door de beheerders',
@@ -41,7 +85,7 @@ if (isset($_POST["description"]) && isset($_POST["periode"])) {
             <span class="card-title">Verkiesbaar Stellen</span>
             <div class="row">
             
-              <form class="col s12" method="post" action="/verkiesbaar">
+              <form class="col s12" method="post" action="/verkiesbaar" enctype="multipart/form-data">
                 <div class="row">
                   <div class="input-field col s6">
                     <input id="first_name" type="text" value="<?=$_GEBRUIKER->voornaam?>" class="validate" readonly>
@@ -54,6 +98,15 @@ if (isset($_POST["description"]) && isset($_POST["periode"])) {
                   <div class="input-field col s12">
                     <textarea rows="10" id="description" name="description" class="materialize-textarea" required></textarea>
                     <label for="description">Omschrijving</label>
+                  </div>
+                  <div class="file-field input-field col s12">
+                    <div class="btn">
+                      <span>Bestand</span>
+                      <input name="profilePicture" type="file" accept="image/*">
+                    </div>
+                    <div class="file-path-wrapper">
+                      <input class="file-path validate" type="text">
+                    </div>
                   </div>
                   <div class="input-field col s12">
                     <select id="periode" name="periode" required>

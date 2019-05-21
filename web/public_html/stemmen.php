@@ -125,7 +125,7 @@ if ($periodes !== false) {
         <div class="col s12 m4 l3">
           <div class="card">
             <div class="card-image">
-              <img src="/images/defualt.jpg">
+              <img src="/images/user/u<?=$verkiesbare->getID()?>.png">
             </div>
             <div class="card-content">
               <span class="card-title"><?=$verkiesbare->getGebruiker()->getNaam()?></span>
